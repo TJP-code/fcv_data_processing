@@ -1,6 +1,6 @@
 clear
 close all
-datapath = 'C:\Users\tjahansprice\Google Drive\FCV\FCV data processing\MK801_VariableRewardData\46_20170208_02 - Variable reward post\';
+datapath = 'C:\Users\mpanagi\Documents\GitHub\fcv_data_processing46_20170208_02 - Variable reward post\';
 
 %-------------------------------------------------------------
 %cv match params
@@ -61,8 +61,8 @@ end
 
 %let f-test pick out components, or specific number
 
-A = dlmread('MK801_VariableRewardData\chemoset2\cvmatrix2.txt');
-C = dlmread('MK801_VariableRewardData\chemoset2\concmatrix2.txt');
+A = dlmread('C:\Users\mpanagi\Documents\GitHub\fcv_data_processing\chemosetcvmatrix2.txt');
+C = dlmread('C:\Users\mpanagi\Documents\GitHub\fcv_data_processing\chemosetconcmatrix2.txt');
 pcs = [];
 alpha = [];
 i = [];
