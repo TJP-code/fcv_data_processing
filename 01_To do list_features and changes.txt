@@ -1,0 +1,9 @@
+FCV analysis to do list:
+
+Template:
+
+Filename: batch_chemometrics.m 
+Feature: Full funcitonality
+Priority: High
+Name: Marios Panayi
+Date: 26/10/2017
