@@ -26,3 +26,34 @@
 
 %plot an avergae colourplot, average c vs t (smoothed), individual c vs t
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% cv match
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%fix peak shift - not hardcoded
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% visualise
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%fix ttls
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% bg subtract
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%fix filename issue
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% read tarheel
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%use header info
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% run chemometrics
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%make into function
+
+%
