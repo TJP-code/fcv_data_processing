@@ -26,4 +26,3 @@
 
 %plot an avergae colourplot, average c vs t (smoothed), individual c vs t
 
-%read about drugs to use
