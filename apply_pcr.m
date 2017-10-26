@@ -23,13 +23,3 @@ Q = diag(residuals'*residuals)';
 Q_exclusion = find(Q>Qcrit);
 Q_cutoff = C_predicted;
 Q_cutoff(Q_exclusion) = NaN;
-
-
-
-%% Hello Tom
-
-<<<<<<< HEAD
-%% All your base are belong to me!
-=======
-%% test conflict
->>>>>>> b6ad91c4cb79f50a6167431f2ef33be477d782a0
