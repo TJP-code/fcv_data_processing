@@ -94,6 +94,7 @@ if ~isempty(ph_match)
     title('Template PH CV');xlabel('Voltage');ylabel('Current (nA)')
 end
 
+%Modify TTLs to allow for separate lines
 for i = 1:size(TTLs,2)
     TTLs_plot(:,i) = TTLs(:,i) + i
 end
