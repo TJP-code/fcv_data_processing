@@ -96,7 +96,7 @@ end
 
 %Modify TTLs to allow for separate lines
 for i = 1:size(TTLs,2)
-    TTLs_plot(:,i) = TTLs(:,i) + i
+    TTLs_plot(:,i) = TTLs(:,i) + i;
 end
 
 if ~isempty(TTLs)
