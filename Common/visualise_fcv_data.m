@@ -95,8 +95,9 @@ if ~isempty(ph_match)
 end
 
 %Modify TTLs to allow for separate lines
+TTLs_plot = TTLs * 0.5;
 for i = 1:size(TTLs,2)
-    TTLs_plot(:,i) = TTLs(:,i) + i;
+    TTLs_plot(:,i) = TTLs_plot(:,i) + i;
 end
 
 if ~isempty(TTLs)
