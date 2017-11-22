@@ -1,6 +1,6 @@
 function [h, fcv_IT, fcv_CV] = visualise_fcv_data(fcv_data, ts, params, TTLs, cv_match, ph_match)
 % function [h] = visualise_fcv_data(fcv_data, ts, params, cv_match)
-% Visualise FCV data, plots fcv data and returned a handle to the figure
+% Visualise FCV data, plots fcv data and returns a handle to the figure
 
 % plotting data include: fcv colour plot, current vs time, and cyclic
 % voltammogram for given points in the data. cv match data and TTLs are also plotted if provided 
@@ -93,9 +93,16 @@ if ~isempty(ph_match)
     plot(ph_match(1:size(cv_match,2)))
     title('Template PH CV');xlabel('Voltage');ylabel('Current (nA)')
 end
+
+%Modify TTLs to allow for separate lines
+TTLs_plot = TTLs * 0.5;
+for i = 1:size(TTLs,2)
+    TTLs_plot(:,i) = TTLs_plot(:,i) + i;
+end
+
 if ~isempty(TTLs)
     subplot(2,3,4);
-    plot(ts,TTLs)
+    plot(ts,TTLs_plot)
     title('TTLs');xlim([ts(1),max(ts)]);xlabel('Times(s)');
     
 end
