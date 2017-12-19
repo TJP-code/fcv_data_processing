@@ -1,6 +1,6 @@
 clear
 close all
-datapath = 'C:\Users\mpanagi\Documents\GitHub\fcv_data_processing46_20170208_02 - Variable reward post\';
+datapath = '..\fcv_data_processing\test data\46_20170208_02 - Variable reward post\';
 
 %-------------------------------------------------------------
 %cv match params
@@ -61,8 +61,8 @@ end
 
 %let f-test pick out components, or specific number
 
-A = dlmread('C:\Users\mpanagi\Documents\GitHub\fcv_data_processing\chemosetcvmatrix2.txt');
-C = dlmread('C:\Users\mpanagi\Documents\GitHub\fcv_data_processing\chemosetconcmatrix2.txt');
+A = dlmread('..\fcv_data_processing\chemosetcvmatrix2.txt');
+C = dlmread('..\fcv_data_processing\chemosetconcmatrix2.txt');
 pcs = [];
 alpha = [];
 i = [];
@@ -72,8 +72,7 @@ for i = 1:length(processed_data)
 
     [C_predicted{i}, Q{i}, Q_cutoff{i}, model_cvs{i}, residuals{i}] = apply_pcr(processed_data{i}, Vc, F, Qcrit);
     
-    [RHO, r_sqr] = cv_match_analysis(processed_data{i}, cv_params, cut_TTLs{i}(:,[2 3 params.target_bit]));
-    
+    [h] = visualise_fcv_data(processed_data{i}, ts, cv_params, cv_match, cut_TTLs);
     figure
     subplot(2,2,1)
     plot(C_predicted{i}(1,:))
