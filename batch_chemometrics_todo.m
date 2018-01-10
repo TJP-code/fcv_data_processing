@@ -63,7 +63,7 @@
 
 %verbose mode with command line output
 
-%data output: one version to paste into excel one data structure 
+%data output: one version to paste into excel, one data structure 
 
 % plot for individual trials 1: colour plot, chemometric colorplot, c vs t (chemometric output),
 % TTLS

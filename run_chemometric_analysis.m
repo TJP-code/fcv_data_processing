@@ -17,7 +17,7 @@ cv_params.bg = 95;
 %--------------------------------------------------------------
 
 no_of_channels = 2;
-[TTLs, ch0_fcv_data, ch1_fcv_data] = read_whole_tarheel_session(datapath, no_of_channels);
+[TTLs, ch0_fcv_data, ch1_fcv_data, ts] = read_whole_tarheel_session(datapath, no_of_channels);
 
 [TTL_data.start, TTL_data.end] = extract_TTL_times(TTLs);
 TTL_data.TTLs = TTLs;
@@ -61,8 +61,8 @@ end
 
 %let f-test pick out components, or specific number
 
-A = dlmread('..\fcv_data_processing\chemosetcvmatrix2.txt');
-C = dlmread('..\fcv_data_processing\chemosetconcmatrix2.txt');
+A = dlmread('..\fcv_data_processing\chemoset\cvmatrix2.txt');
+C = dlmread('..\fcv_data_processing\chemoset\concmatrix2.txt');
 pcs = [];
 alpha = [];
 i = [];
@@ -72,27 +72,38 @@ for i = 1:length(processed_data)
 
     [C_predicted{i}, Q{i}, Q_cutoff{i}, model_cvs{i}, residuals{i}] = apply_pcr(processed_data{i}, Vc, F, Qcrit);
     
-    [h] = visualise_fcv_data(processed_data{i}, ts, cv_params, cv_match, cut_TTLs);
+    [h] = visualise_fcv_data(processed_data{i}, [], cv_params, cut_TTLs{i});
+    %plot colour plot
     figure
-    subplot(2,2,1)
-    plot(C_predicted{i}(1,:))
+    subplot(6,2,1)
+    plot_fcvdata(data,ts)    
+    c = colorbar('westoutside');
+    ylabel(c,'Current(nA)')
     
-    subplot(2,2,2)
-    imagesc(model_cvs{i})
-    load fcv_colormap
-    colormap(norm_fcv)
-    [vals] = scale_fcv_colorbar(model_cvs{i});
-    caxis(vals)
-    ax = gca;
-    ax.YDir = 'normal';
-    colorbar
+    %plot chemometric colour plot
+    subplot(6,2,2)
+    plot_fcvdata(model_cvs{i},ts)    
+    c = colorbar('westoutside');
+    ylabel(c,'Current(nA)')
     
-    subplot(2,2,3)
-    plot(Q{i})    
+    %plot I vs T
+    subplot(6,2,3)
+    plot(C_predicted{i},'k')
+    title('I vs T');xlabel('Time(s)');ylabel('Current (nA)')
+    
+    %plot TTLS
+    subplot(6,2,4)
+    title('TTLs');xlabel('Time(s)');ylabel('TTLs')
+    
+    %plot model fit
+    subplot(6,2,5)    
+    plot(Q{i},'k')    
     hold on 
-    plot(Qcrit*ones(size(Q{i},2)),'k')
+    plot(Qcrit*ones(size(Q{i},2)),'r')
+    title('Residuals');xlabel('Time(s)');ylabel('Q value')
     
-    subplot(2,2,4)
+    %plot residuals
+    subplot(6,2,6)
     imagesc(residuals{i})
     load fcv_colormap
     colormap(norm_fcv)
@@ -101,5 +112,7 @@ for i = 1:length(processed_data)
     ax = gca;
     ax.YDir = 'normal';
     colorbar
-
+    
 end
+
+%Plot avg
