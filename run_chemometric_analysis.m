@@ -33,11 +33,11 @@ params.sample_rate = 10;
 params.time_align = [10 30];
 params.bg_pos = -2; %seconds relative to target_location
 
-exclude_list = [4]; %not implemented yet
+exclude_list = [2]; %not implemented yet
 bg_adjustments = [5 -.5]; %not implemented yet
 
-[cut_ch0_data, cut_ch0_points, cut_TTLs] = cut_fcv_data(ch0_fcv_data, TTL_data, params);
-[cut_ch1_data, cut_ch1_points, ~] = cut_fcv_data(ch1_fcv_data, TTL_data, params);
+[cut_ch0_data, cut_ch0_points, cut_TTLs, cut_ts] = cut_fcv_data(ch0_fcv_data, TTL_data, ts, params);
+[cut_ch1_data, cut_ch1_points, ~] = cut_fcv_data(ch1_fcv_data, TTL_data, ts, params);
 
 %set bg
 bg_pos = ones(length(cut_ch0_data),1);
@@ -66,53 +66,63 @@ C = dlmread('..\fcv_data_processing\chemoset\concmatrix2.txt');
 pcs = [];
 alpha = [];
 i = [];
+sum_colourplot = zeros(size(processed_data{1}));
 for i = 1:length(processed_data)
 
     [Vc, F, Qcrit, K] = pca_training_set(A,C,pcs, alpha);
 
     [C_predicted{i}, Q{i}, Q_cutoff{i}, model_cvs{i}, residuals{i}] = apply_pcr(processed_data{i}, Vc, F, Qcrit);
     
-    [h] = visualise_fcv_data(processed_data{i}, [], cv_params, cut_TTLs{i});
     %plot colour plot
     figure
-    subplot(6,2,1)
-    plot_fcvdata(data,ts)    
-    c = colorbar('westoutside');
+    subplot(2,3,1)
+    plot_fcvdata(processed_data{i},cut_ts{i})    
+    c = colorbar('eastoutside');
     ylabel(c,'Current(nA)')
-    
+    title('Raw FCV data')
     %plot chemometric colour plot
-    subplot(6,2,2)
-    plot_fcvdata(model_cvs{i},ts)    
-    c = colorbar('westoutside');
+    subplot(2,3,2)
+    plot_fcvdata(model_cvs{i},cut_ts{i})    
+    c = colorbar('eastoutside');
     ylabel(c,'Current(nA)')
-    
+    title('Chemometric FCV data')
     %plot I vs T
-    subplot(6,2,3)
-    plot(C_predicted{i},'k')
+    subplot(2,3,3)
+    plot(smooth(C_predicted{i}(1,:),5),'k')
     title('I vs T');xlabel('Time(s)');ylabel('Current (nA)')
     
     %plot TTLS
-    subplot(6,2,4)
+    subplot(2,3,6)
+    plot_TTLs(cut_TTLs{i}, cut_ts{i})
     title('TTLs');xlabel('Time(s)');ylabel('TTLs')
     
     %plot model fit
-    subplot(6,2,5)    
+    subplot(2,3,4)    
     plot(Q{i},'k')    
     hold on 
     plot(Qcrit*ones(size(Q{i},2)),'r')
     title('Residuals');xlabel('Time(s)');ylabel('Q value')
     
     %plot residuals
-    subplot(6,2,6)
-    imagesc(residuals{i})
-    load fcv_colormap
-    colormap(norm_fcv)
-    [vals] = scale_fcv_colorbar(residuals{i});
-    caxis(vals)
-    ax = gca;
-    ax.YDir = 'normal';
-    colorbar
+    subplot(2,3,5)
+    plot_fcvdata(residuals{i},cut_ts{i})
+    c = colorbar('eastoutside');
+    ylabel(c,'Current(nA)')
+    title('Residuals')
     
+    all_IvT(i,:) = smooth(C_predicted{i}(1,:),5);
+    sum_colourplot = sum_colourplot+model_cvs{i};
 end
 
+figure
+subplot(1,2,1)
+avg_colourplot = sum_colourplot/length(processed_data);
+plot_fcvdata(avg_colourplot)    
+c = colorbar('eastoutside');
+ylabel(c,'Current(nA)')
+title('Average Chemometric plot')
+subplot(1,2,2)
+plot(all_IvT')
+hold on
+plot(mean(all_IvT),'k')
 %Plot avg

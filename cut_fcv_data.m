@@ -1,4 +1,4 @@
-function [cut_data, cut_points, cut_TTLs] = cut_fcv_data(fcv_data, TTL_data, params)
+function [cut_data, cut_points, cut_TTLs, cut_ts] = cut_fcv_data(fcv_data, TTL_data, ts, params)
 
 
 %cut parameters
@@ -52,7 +52,8 @@ cut_points(index,2) = size(fcv_data,2);
 %for each cut point
 for i = 1:size(cut_points,1)
     cut_data{i} = fcv_data(:,[cut_points(i,1):cut_points(i,2)]);
-    cut_TTLs{i} = TTL_data.TTLs([cut_points(i,1):cut_points(i,2)],:);   
+    cut_TTLs{i} = TTL_data.TTLs([cut_points(i,1):cut_points(i,2)],:);
+    cut_ts{i} = ts([cut_points(i,1):cut_points(i,2)]);
       
 end
 

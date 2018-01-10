@@ -1,4 +1,4 @@
-function h = plot_TTLs(TTLs)
+function h = plot_TTLs(TTLs, ts)
 %function h = plot_TTLs(TTLs)
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

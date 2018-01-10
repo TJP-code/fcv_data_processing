@@ -14,7 +14,6 @@ function h = plot_fcvdata(data,ts,clim)
     caxis(clim)
     ax = gca;
     ax.YDir = 'normal';
-    colorbar
     
     title('Colourplot - Applied waveform Vs Time');xlabel('Time(s)');ylabel('Point Number')
     

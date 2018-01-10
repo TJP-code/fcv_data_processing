@@ -94,17 +94,9 @@ if ~isempty(ph_match)
     title('Template PH CV');xlabel('Voltage');ylabel('Current (nA)')
 end
 
-%Modify TTLs to allow for separate lines
-TTLs_plot = TTLs * 0.5;
-for i = 1:size(TTLs,2)
-    TTLs_plot(:,i) = TTLs_plot(:,i) + i;
-end
-
 if ~isempty(TTLs)
     subplot(2,3,4);
-    plot(ts,TTLs_plot)
-    title('TTLs');xlim([ts(1),max(ts)]);xlabel('Times(s)');
-    
+    plot_TTLs(TTLs,ts);
 end
 
 
