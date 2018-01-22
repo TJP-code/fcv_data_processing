@@ -2,10 +2,11 @@ function visualise_fcv_trials()
 clear
 close all
 datapath = '..\fcv_data_processing\test data\46_20170208_02 - Variable reward post\';
-datapath = 'I:\GLRA_FCV\Feratu_Coach\20171220_RI60Day1\RI60Day1\';
-fig_title = 'Feratu (Coach) RI60 Day 1 Rewarded lever press';
+datapath = 'C:\Data\GluA1 FCV\GluA1 Data\003\Evil_morty\20171218_RI60Day1\RI60Day1\';
+fig_title = 'Evil Morty RI60 Day 1 Rewarded lever press';
 plot_each =  0; %plot individual trials/cut timestamps
-scan_number = 160;
+plot_all_IvT = 1;
+scan_number = 153;
 
 %-------------------------------------------------------------
 %cv match params
@@ -48,12 +49,13 @@ bg_adjustments = [5 -.5]; %not implemented yet
 
 [cut_data_ch0, cut_points_ch0, cut_TTLs, cut_ts] = cut_fcv_data(ch0_fcv_data, TTL_data, ts, params);
 processed_data_ch0 = bg_subtract(cut_data_ch0, params, cv_params, bg_params);
-plot_fcv_trials(processed_data_ch0, scan_number,cut_ts, cut_TTLs, plot_each,exclude_list)
+plot_fcv_trials(processed_data_ch0, scan_number,cut_ts, cut_TTLs, plot_each, plot_all_IvT, exclude_list)
 suptitle([fig_title ' Ch0']);
+
 if no_of_channels == 2
     [cut_data_ch1, cut_points_ch1, cut_TTLs, cut_ts] = cut_fcv_data(ch1_fcv_data, TTL_data, ts, params);
     processed_data_ch1 = bg_subtract(cut_data_ch1, params, cv_params, bg_params);
-    plot_fcv_trials(processed_data_ch1, scan_number,cut_ts, cut_TTLs, plot_each,exclude_list)
+    plot_fcv_trials(processed_data_ch1, scan_number,cut_ts, cut_TTLs, plot_each, plot_all_IvT, exclude_list)
     suptitle([fig_title ' Ch1']);
 end
 
@@ -72,7 +74,7 @@ for i = 1:length(cut_data)
 
 end
 
-function h = plot_fcv_trials(processed_data, scan_number,cut_ts, cut_TTLs, plot_each,exclude_list)
+function h = plot_fcv_trials(processed_data, scan_number,cut_ts, cut_TTLs, plot_each, plot_all_IvT, exclude_list)
 %option to plot/prune
 
 %plot avg IvsT, plus individual trials, look for outliers
@@ -100,6 +102,9 @@ for i = 1:length(processed_data)
             subplot(1,3,3)
             plot_TTLs(cut_TTLs{i}, cut_ts{i})
             title('TTLs');xlabel('Time(s)');ylabel('TTLs')
+            
+            figtitle = sprintf('Trial number %d', i);
+            suptitle(figtitle)
         end
 
         all_IvT(i,:) = smooth(processed_data{i}(scan_number,:),5);
@@ -107,6 +112,20 @@ for i = 1:length(processed_data)
     end
 end
 
+%plot all i vs t
+if plot_all_IvT
+    figure
+    hold on
+    trials = size(all_IvT,1);
+    rows = floor(sqrt(trials));
+    cols = ceil(sqrt(trials));    
+    for j = 1:size(all_IvT,1)
+        subplot(rows,cols,j);
+        plot(cut_ts{j},smooth(processed_data{j}(scan_number,:),5),'k')
+        xlim([min(cut_ts{j}), max(cut_ts{j})]);
+    end
+    suptitle('All trials I vs T')
+end
 
 h = figure;
 subplot(1,2,1)
