@@ -6,6 +6,7 @@ datapath = 'I:\GLRA_FCV\Feratu_Coach\20171220_RI60Day1\RI60Day1\';
 fig_title = 'Feratu (Coach) RI60 Day 1 Rewarded lever press';
 plot_each =  0; %plot individual trials/cut timestamps
 scan_number = 160;
+TTLnames = {'Reward', 'Head Entry', 'Head Exit', 'Left Lever Press', 'Left Lever Out', 'Right Lever Press', 'Right Lever Out', 'Fan', '', '', '', '', '', '', '', ''};
 
 %-------------------------------------------------------------
 %cv match params
@@ -98,7 +99,7 @@ for i = 1:length(processed_data)
 
             %plot TTLS
             subplot(1,3,3)
-            plot_TTLs(cut_TTLs{i}, cut_ts{i})
+            plot_TTLs(cut_TTLs{i}, cut_ts{i}, TTLnames)
             title('TTLs');xlabel('Time(s)');ylabel('TTLs')
         end
 
