@@ -7,13 +7,12 @@ fig_title = 'Feratu (Coach) RI60 Day 1 Rewarded lever press';
 datapath = 'C:\Data\GluA1 FCV\GluA1 Data\003\Evil_morty\20171218_RI60Day1\RI60Day1\';
 fig_title = 'Evil Morty RI60 Day 1 Rewarded lever press';
 plot_each =  0; %plot individual trials/cut timestamps
-<<<<<<< HEAD
+
 scan_number = 160;
-TTLnames = {'Reward', 'Head Entry', 'Head Exit', 'Left Lever Press', 'Left Lever Out', 'Right Lever Press', 'Right Lever Out', 'Fan', '', '', '', '', '', '', '', ''};
-=======
+
 plot_all_IvT = 1;
 scan_number = 153;
->>>>>>> d74d78f8844dc8fb32f03f53090f926aeefe5ffe
+
 
 %-------------------------------------------------------------
 %bg sub params
@@ -75,6 +74,9 @@ for i = 1:length(cut_data)
 end
 
 function h = plot_fcv_trials(processed_data, scan_number,cut_ts, cut_TTLs, plot_each, plot_all_IvT, exclude_list)
+
+TTLnames = {'Reward', 'Head Entry', 'Head Exit', 'Left Lever Press', 'Left Lever Out', 'Right Lever Press', 'Right Lever Out', 'Fan', '', '', '', '', '', '', '', ''};
+
 %option to plot/prune
 
 %plot avg IvsT, plus individual trials, look for outliers
