@@ -9,17 +9,10 @@ plot_all_IvT = 1;
 scan_number = 153;
 
 %-------------------------------------------------------------
-%cv match params
+%bg sub params
 bg_params.filt_freq = 2000; %we found 2000Hz for 2 channel data gave a smoother CV
 bg_params.sample_freq = 58820; 
 
-cv_params.cv_match_template = 'Chemometrics\cv_match';
-cv_params.shiftpeak = 0;
-cv_params.plotfig = 1;
-cv_params.colormap_type = 'fcv';
-cv_params.scan_number = 140;
-cv_params.point_number = 170;
-cv_params.bg = 95;
 %--------------------------------------------------------------
 
 %meta data to add to structure:
@@ -46,21 +39,22 @@ exclude_list = [17,23, 57, 42]; %not implemented yet
 bg_adjustments = [5 -.5]; %not implemented yet
 
 
-
+%cut ch0 data, background and plot
 [cut_data_ch0, cut_points_ch0, cut_TTLs, cut_ts] = cut_fcv_data(ch0_fcv_data, TTL_data, ts, params);
-processed_data_ch0 = bg_subtract(cut_data_ch0, params, cv_params, bg_params);
+processed_data_ch0 = bg_subtract(cut_data_ch0, params, bg_params);
 plot_fcv_trials(processed_data_ch0, scan_number,cut_ts, cut_TTLs, plot_each, plot_all_IvT, exclude_list)
 suptitle([fig_title ' Ch0']);
 
+%if two channel recording do the same for ch1
 if no_of_channels == 2
     [cut_data_ch1, cut_points_ch1, cut_TTLs, cut_ts] = cut_fcv_data(ch1_fcv_data, TTL_data, ts, params);
-    processed_data_ch1 = bg_subtract(cut_data_ch1, params, cv_params, bg_params);
+    processed_data_ch1 = bg_subtract(cut_data_ch1, params, bg_params);
     plot_fcv_trials(processed_data_ch1, scan_number,cut_ts, cut_TTLs, plot_each, plot_all_IvT, exclude_list)
     suptitle([fig_title ' Ch1']);
 end
 
 
-function processed_data = bg_subtract(cut_data, params, cv_params, bg_params)
+function processed_data = bg_subtract(cut_data, params, bg_params)
 
 %set bg
 bg_pos = ones(length(cut_data),1);
@@ -69,7 +63,6 @@ bg_pos = bg_pos*((params.time_align(1)+params.bg_pos)*params.sample_rate);
 %%bg subtract/plot
 for i = 1:length(cut_data)
     bg_params.bg_pos  = bg_pos(i);
-    cv_params.bg = bg_pos(i);
     [processed_data{i}] = process_raw_fcv_data(cut_data{i}, bg_params);
 
 end
