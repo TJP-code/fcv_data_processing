@@ -1,10 +1,10 @@
+function visualise_fcv_trials()
 clear
 close all
 datapath = '..\fcv_data_processing\test data\46_20170208_02 - Variable reward post\';
 datapath = 'C:\Data\GluA1 FCV\GluA1 Data\003\Bird_person\20171220_RI60Day1\RI60Day1\';
-
-channel = 0;
-plot_each =  1; %plot individual trials/cut timestamps
+fig_title = 'Bird Person RI60 Day 1 Rewarded lever press';
+plot_each =  0; %plot individual trials/cut timestamps
 scan_number = 160;
 
 %-------------------------------------------------------------
@@ -44,28 +44,40 @@ params.bg_pos = -2; %seconds relative to target_location
 exclude_list = [2]; %not implemented yet
 bg_adjustments = [5 -.5]; %not implemented yet
 
-[cut_ch0_data, cut_ch0_points, cut_TTLs, cut_ts] = cut_fcv_data(ch0_fcv_data, TTL_data, ts, params);
-[cut_ch1_data, cut_ch1_points, ~] = cut_fcv_data(ch1_fcv_data, TTL_data, ts, params);
+
+
+[cut_data_ch0, cut_points_ch0, cut_TTLs, cut_ts] = cut_fcv_data(ch0_fcv_data, TTL_data, ts, params);
+processed_data_ch0 = bg_subtract(cut_data_ch0, params, cv_params, bg_params);
+plot_fcv_trials(processed_data_ch0, scan_number,cut_ts, cut_TTLs, plot_each)
+suptitle([fig_title ' Ch0']);
+if no_of_channels == 2
+    [cut_data_ch1, cut_points_ch1, cut_TTLs, cut_ts] = cut_fcv_data(ch1_fcv_data, TTL_data, ts, params);
+    processed_data_ch1 = bg_subtract(cut_data_ch1, params, cv_params, bg_params);
+    plot_fcv_trials(processed_data_ch1, scan_number,cut_ts, cut_TTLs, plot_each)
+    suptitle([fig_title ' Ch1']);
+end
+
+
+function processed_data = bg_subtract(cut_data, params, cv_params, bg_params)
 
 %set bg
-bg_pos = ones(length(cut_ch0_data),1);
+bg_pos = ones(length(cut_data),1);
 bg_pos = bg_pos*((params.time_align(1)+params.bg_pos)*params.sample_rate);
 
 %%bg subtract/plot
-for i = 1:length(cut_ch0_data)
+for i = 1:length(cut_data)
     bg_params.bg_pos  = bg_pos(i);
     cv_params.bg = bg_pos(i);
-    [processed_data{i}] = process_raw_fcv_data(cut_ch0_data{i}, bg_params);
+    [processed_data{i}] = process_raw_fcv_data(cut_data{i}, bg_params);
 
 end
 
+function h = plot_fcv_trials(processed_data, scan_number,cut_ts, cut_TTLs, plot_each)
 %option to plot/prune
 
 %plot avg IvsT, plus individual trials, look for outliers
 
 %---------------------
-
-i = [];
 sum_colourplot = zeros(size(processed_data{1}));
 for i = 1:length(processed_data)
     if plot_each
@@ -94,7 +106,8 @@ for i = 1:length(processed_data)
     sum_colourplot = sum_colourplot+processed_data{i};
 end
 
-figure
+
+h = figure;
 subplot(1,2,1)
 avg_colourplot = sum_colourplot/length(processed_data);
 plot_fcvdata(avg_colourplot)    

@@ -1,7 +1,8 @@
+function visualise_fcv_trials
 clear
 close all
 datapath = '..\fcv_data_processing\test data\46_20170208_02 - Variable reward post\';
-datapath = 'C:\Data\GluA1 FCV\GluA1 Data\003\Evil_morty\20171218_RI60Day1\RI60Day1\';
+datapath = 'C:\Data\GluA1 FCV\GluA1 Data\003\Bird_person\20171220_RI60Day1\RI60Day1\';
 
 plot_each =  1; %plot individual trials/cut timestamps
 scan_number = 160;
@@ -103,5 +104,6 @@ title('Average Colour plot')
 subplot(1,2,2)
 plot(all_IvT')
 hold on
-plot(mean(all_IvT),'k')
+plot(mean(all_IvT),'k','LineWidth', 2)
+title('I vs T');xlabel('Time(s)');ylabel('Current (nA)')
 %Plot avg
