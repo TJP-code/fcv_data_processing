@@ -1,4 +1,23 @@
 function [cut_data, cut_points, cut_TTLs, cut_ts] = cut_fcv_data(fcv_data, TTL_data, ts, params)
+%function [cut_data, cut_points, cut_TTLs, cut_ts] = cut_fcv_data(fcv_data, TTL_data, ts, params)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% 1- write a help with examples
+%
+% 2 - buffer is a stupid name, should be time window or similar
+%
+% the way the buffer works is that trials which contain other TTLs within a window around the
+% target TTL are included(kept) or excluded(ignored?) i.e. lever press as
+% target, trials that have a reward delivery within a window of 2 seconds before or 5 seconds after
+%
+%
+% To-do fix issue of ignoring/excluding instances of the target ttl, i.e.
+% isolate a lever press with no other lever presses within the time window (buffer)
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5%%
+
 
 
 %cut parameters
@@ -36,9 +55,9 @@ if ~isempty(params.ignore_repeats)
     k = 1;
     kmax = length(cut_location);
     while k ~= kmax
-        kmax = length(cut_location);
         index = find((cut_location > (cut_location(k)) & (cut_location<cut_location(k)+(params.ignore_repeats*params.sample_rate))));
         cut_location(index) = [];   
+        kmax = length(cut_location);
         k = k+1;
     end
 end
