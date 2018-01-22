@@ -1,17 +1,16 @@
 function visualise_fcv_trials()
 clear
 close all
+%variables: move these into parameters
 datapath = '..\fcv_data_processing\test data\46_20170208_02 - Variable reward post\';
 datapath = 'I:\GLRA_FCV\Feratu_Coach\20171220_RI60Day1\RI60Day1\';
-fig_title = 'Feratu (Coach) RI60 Day 1 Rewarded lever press';
-datapath = 'C:\Data\GluA1 FCV\GluA1 Data\003\Evil_morty\20171218_RI60Day1\RI60Day1\';
-fig_title = 'Evil Morty RI60 Day 1 Rewarded lever press';
-plot_each =  0; %plot individual trials/cut timestamps
+datapath = 'C:\Data\GluA1 FCV\GluA1 Data\003\Gazorpazorp\20180118_RI60Day3\RI60Day3\';
+fig_title = 'zorp RI60 Day 3 Rewarded lever press';
 
-scan_number = 160;
-
+exclude_list = [];%[17,23, 57, 42];
+plot_each =  1; %plot individual trials/cut timestamps
+scan_number = 150;
 plot_all_IvT = 1;
-scan_number = 153;
 
 
 %-------------------------------------------------------------
@@ -22,7 +21,7 @@ bg_params.sample_freq = 58820;
 %--------------------------------------------------------------
 
 %meta data to add to structure:
-%TTLS: Reward = 1, mag entry = 2, exit = 3, lever press = 6
+
 
 no_of_channels = 2;
 [TTLs, ch0_fcv_data, ch1_fcv_data, ts] = read_whole_tarheel_session(datapath, no_of_channels);
@@ -32,16 +31,16 @@ TTL_data.TTLs = TTLs;
 
 params.include.bits = []; %include target_bit
 params.include.buffer = []; %time(s) before target,time after target
-params.exclude.bits = [];
-params.exclude.buffer = [];
-params.target_bit = 1;
+params.exclude.bits = [1;6];
+params.exclude.buffer = [5 5; 2 -1];
+params.target_bit = 6;
 params.target_location = 0; %0 = start, 1 = end, 0.5 = middle
-params.ignore_repeats = [10]; %no of seconds to ignore repeats
+params.ignore_repeats = []; %no of seconds to ignore repeats
 params.sample_rate = 10;
 params.time_align = [10 30]; %window size, [seconds before after]
 params.bg_pos = -2; %seconds relative to target_location
 
-exclude_list = [17,23, 57, 42]; %not implemented yet
+
 bg_adjustments = [5 -.5]; %not implemented yet
 
 
@@ -61,6 +60,8 @@ end
 
 
 function processed_data = bg_subtract(cut_data, params, bg_params)
+
+%if no data give error
 
 %set bg
 bg_pos = ones(length(cut_data),1);
@@ -132,7 +133,7 @@ end
 h = figure;
 subplot(1,2,1)
 avg_colourplot = sum_colourplot/length(processed_data);
-plot_fcvdata(avg_colourplot,[],[-2 3])    
+plot_fcvdata(avg_colourplot)    
 c = colorbar('eastoutside');
 ylabel(c,'Current(nA)')
 title('Average Colour plot')
@@ -141,4 +142,5 @@ plot(all_IvT')
 hold on
 plot(mean(all_IvT),'k','LineWidth', 2)
 title('I vs T');xlabel('Time(s)');ylabel('Current (nA)')
+set(gcf, 'Position', [300, 300, 1300, 500])
 %Plot avg
