@@ -97,6 +97,12 @@ cut_data(rm_list) = [];
 cut_TTLs(rm_list) = [];
 cut_points(rm_list,:) = [];
 
+if isempty(cut_points)
+    error('ERROR: No cut points were found with these criteria. Please change criteria and try again.')
+end
+    
+
+
 function [result] = include_exclude(buffer, sample_rate, cut_location, TTLs, cut_TTLs, ie_bits)
 
 %extract segment using buffer

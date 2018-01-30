@@ -5,6 +5,7 @@ close all
 datapath = '..\fcv_data_processing\test data\46_20170208_02 - Variable reward post\';
 datapath = 'I:\GLRA_FCV\Feratu_Coach\20171220_RI60Day1\RI60Day1\';
 datapath = 'C:\Data\GluA1 FCV\GluA1 Data\003\Gazorpazorp\20180118_RI60Day3\RI60Day3\';
+datapath = 'E:\VolatmmetryRoomData\GLRA_FCV\003\Gazorpazorp\20180118_RI60Day3\RI60Day3\';
 fig_title = 'zorp RI60 Day 3 Rewarded lever press';
 
 exclude_list = [];%[17,23, 57, 42];
@@ -33,7 +34,7 @@ params.include.bits = []; %include target_bit
 params.include.buffer = []; %time(s) before target,time after target
 params.exclude.bits = [1;6];
 params.exclude.buffer = [5 5; 2 -1];
-params.target_bit = 6;
+params.target_bit = 1;
 params.target_location = 0; %0 = start, 1 = end, 0.5 = middle
 params.ignore_repeats = []; %no of seconds to ignore repeats
 params.sample_rate = 10;
