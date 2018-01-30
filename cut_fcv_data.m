@@ -54,7 +54,7 @@ end
 if ~isempty(params.ignore_repeats)
     k = 1;
     kmax = length(cut_location);
-    while k ~= kmax
+    while k <= kmax
         index = find((cut_location > (cut_location(k)) & (cut_location<cut_location(k)+(params.ignore_repeats*params.sample_rate))));
         cut_location(index) = [];   
         kmax = length(cut_location);
