@@ -68,6 +68,10 @@ cut_points = [cut_location-params.time_align(1)*params.sample_rate,(cut_location
 index = find(cut_points(:,2) > size(fcv_data,2));
 cut_points(index,2) = size(fcv_data,2);
 
+if isempty(cut_points)
+    error('ERROR: No cut points were found. No instance of target bit detected.')
+end
+
 %for each cut point
 for i = 1:size(cut_points,1)
     cut_data{i} = fcv_data(:,[cut_points(i,1):cut_points(i,2)]);
