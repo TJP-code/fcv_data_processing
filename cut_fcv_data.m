@@ -111,7 +111,7 @@ if ~isempty(buffer)
     for j = 1:size(buffer,1)
         segment = [cut_location-buffer(j,1)*sample_rate,(cut_location-1)+buffer(j,2)*sample_rate];
         TTL_window = TTLs([segment(1):segment(2)],:);  
-        result(j) = (sum(sum(TTL_window(:,ie_bits)))>0);
+        result(j) = (sum(sum(TTL_window(:,ie_bits(j))))>0);
     end
     result = sum(result)>0;
 else
