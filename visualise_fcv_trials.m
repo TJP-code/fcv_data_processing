@@ -9,9 +9,9 @@ datapath = 'E:\VolatmmetryRoomData\GLRA_FCV\003\Gazorpazorp\20180118_RI60Day3\RI
 fig_title = 'zorp RI60 Day 3 Rewarded lever press';
 
 exclude_list = [];%[17,23, 57, 42];
-plot_each =  1; %plot individual trials/cut timestamps
+plot_each =  0; %plot individual trials/cut timestamps
 scan_number = 150;
-plot_all_IvT = 1;
+plot_all_IvT = 0;
 
 
 %-------------------------------------------------------------
@@ -31,9 +31,9 @@ no_of_channels = 2;
 TTL_data.TTLs = TTLs;
 
 params.include.bits = []; %include target_bit
-params.include.buffer = []; %time(s) before target,time after target
-params.exclude.bits = [1;6];
-params.exclude.buffer = [5 5; 2 -1];
+params.include.window = []; %time(s) before target,time after target
+params.exclude.bits = [];
+params.exclude.window = [];
 params.target_bit = 1;
 params.target_location = 0; %0 = start, 1 = end, 0.5 = middle
 params.ignore_repeats = []; %no of seconds to ignore repeats
