@@ -15,6 +15,7 @@ function [cut_data, cut_points, cut_TTLs, cut_ts] = cut_fcv_data(fcv_data, TTL_d
 % To-do fix issue of ignoring/excluding instances of the target ttl, i.e.
 % isolate a lever press with no other lever presses within the time window (window)
 %
+% To-do: fix issue when data cut points exceed teh duration of the recorded data. 
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5%%
 
