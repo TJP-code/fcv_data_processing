@@ -31,7 +31,7 @@ for i = 1:size(TTLs,2)
     TTLs_plot(:,i) = TTLs_plot(:,i) + i;
 end
 
-plot(ts,TTLs_plot)
+h = plot(ts,TTLs_plot);
 title('TTLs');xlim([ts(1),max(ts)]);xlabel('Times(s)');
 set(gca,'YTick',1:size(TTLs,2));
 
