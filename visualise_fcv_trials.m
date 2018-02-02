@@ -1,68 +1,33 @@
-function visualise_fcv_trials()
-clear
-close all
-%variables: move these into parameters
-datapath = '..\fcv_data_processing\test data\46_20170208_02 - Variable reward post\';
-datapath = 'I:\GLRA_FCV\Feratu_Coach\20171220_RI60Day1\RI60Day1\';
-datapath = 'C:\Data\GluA1 FCV\GluA1 Data\003\Gazorpazorp\20180118_RI60Day3\RI60Day3\';
-datapath = 'E:\VolatmmetryRoomData\GLRA_FCV\003\Gazorpazorp\20180118_RI60Day3\RI60Day3\';
-fig_title = 'zorp RI60 Day 3 Rewarded lever press';
+function [processed_data, cut_points, model_cvs, c_predicted, residuals] = ...
+    visualise_fcv_trials(fcv_data, params, cut_params, bg_params, chemo_params)
 
-exclude_list = [];%[17,23, 57, 42];
-plot_each =  1; %plot individual trials/cut timestamps
-scan_number = 150;
-plot_all_IvT = 1;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%initialise variables
+model_cvs = [];
+c_predicted = [];
+residuals = [];
 
-%-------------------------------------------------------------
-%bg sub params
-bg_params.filt_freq = 2000; %we found 2000Hz for 2 channel data gave a smoother CV
-bg_params.sample_freq = 58820; 
+[TTL_data.start, TTL_data.end] = extract_TTL_times(fcv_data.TTLs);
+TTL_data.TTLs = fcv_data.TTLs;
 
-%--------------------------------------------------------------
+%cut data, background and plot
+[cut_data, cut_points, cut_TTLs, cut_ts] = cut_fcv_data(fcv_data.data, TTL_data, fcv_data.ts, cut_params);
+processed_data = bg_subtract(cut_data, cut_params, bg_params);
 
-%meta data to add to structure:
-
-
-no_of_channels = 2;
-[TTLs, ch0_fcv_data, ch1_fcv_data, ts] = read_whole_tarheel_session(datapath, no_of_channels);
-
-[TTL_data.start, TTL_data.end] = extract_TTL_times(TTLs);
-TTL_data.TTLs = TTLs;
-
-params.include.bits = []; %include target_bit
-params.include.buffer = []; %time(s) before target,time after target
-params.exclude.bits = [1;6];
-params.exclude.buffer = [5 5; 2 -1];
-params.target_bit = 1;
-params.target_location = 0; %0 = start, 1 = end, 0.5 = middle
-params.ignore_repeats = []; %no of seconds to ignore repeats
-params.sample_rate = 10;
-params.time_align = [10 30]; %window size, [seconds before after]
-params.bg_pos = -2; %seconds relative to target_location
-
-
-bg_adjustments = [5 -.5]; %not implemented yet
-
-
-%cut ch0 data, background and plot
-[cut_data_ch0, cut_points_ch0, cut_TTLs, cut_ts] = cut_fcv_data(ch0_fcv_data, TTL_data, ts, params);
-processed_data_ch0 = bg_subtract(cut_data_ch0, params, bg_params);
-plot_fcv_trials(processed_data_ch0, scan_number,cut_ts, cut_TTLs, plot_each, plot_all_IvT, exclude_list)
-suptitle([fig_title ' Ch0']);
-
-%if two channel recording do the same for ch1
-if no_of_channels == 2
-    [cut_data_ch1, cut_points_ch1, cut_TTLs, cut_ts] = cut_fcv_data(ch1_fcv_data, TTL_data, ts, params);
-    processed_data_ch1 = bg_subtract(cut_data_ch1, params, bg_params);
-    plot_fcv_trials(processed_data_ch1, scan_number,cut_ts, cut_TTLs, plot_each, plot_all_IvT, exclude_list)
-    suptitle([fig_title ' Ch1']);
+if params.apply_chemometrics
+    %apply chemometrics 
+    [model_cvs, c_predicted, residuals.q, residuals.q_crit, residuals.q_cutoff] = ...
+        fcv_chemometrics(processed_data, chemo_params, cut_TTLs, cut_ts);    
 end
+
+h = plot_fcv_trials(model_cvs, cut_ts, cut_TTLs, params, c_predicted);
+suptitle([params.fig_title]);
 
 
 function processed_data = bg_subtract(cut_data, params, bg_params)
-
-%if no data give error
 
 %set bg
 bg_pos = ones(length(cut_data),1);
@@ -75,9 +40,7 @@ for i = 1:length(cut_data)
 
 end
 
-function h = plot_fcv_trials(processed_data, scan_number,cut_ts, cut_TTLs, plot_each, plot_all_IvT, exclude_list)
-
-TTLnames = {'Reward', 'Head Entry', 'Head Exit', 'Left Lever Press', 'Left Lever Out', 'Right Lever Press', 'Right Lever Out', 'Fan', '', '', '', '', '', '', '', ''};
+function h = plot_fcv_trials(processed_data, cut_ts, cut_TTLs, params, c_predicted)
 
 %option to plot/prune
 
@@ -86,42 +49,51 @@ TTLnames = {'Reward', 'Head Entry', 'Head Exit', 'Left Lever Press', 'Left Lever
 %---------------------
 sum_colourplot = zeros(size(processed_data{1}));
 for i = 1:length(processed_data)
-    if ~ismember(i,exclude_list)
-        if plot_each
+    if ~ismember(i,params.trial_exclude_list)
+        if params.plot_each
             %plot colour plot
             figure
             subplot(1,3,1)
             plot_fcvdata(processed_data{i},cut_ts{i})    
             c = colorbar('eastoutside');
             ylabel(c,'Current(nA)')
-            title('Raw FCV data')
+            if params.apply_chemometrics
+                title('Chemometric FCV data')
+            else
+                title('Raw FCV data')
+            end
 
             %plot I vs T
             subplot(1,3,2)
-            plot(cut_ts{i},smooth(processed_data{i}(scan_number,:),5),'k')
-            title('I vs T');xlabel('Time(s)');ylabel('Current (nA)')
+            if params.apply_chemometrics
+                plot(cut_ts{i},smooth(c_predicted,5),'k')
+                title('Chemometric I vs T');xlabel('Time(s)');ylabel('Current (nA)')
+            else                
+                plot(cut_ts{i},smooth(processed_data{i}(params.scan_number,:),5),'k')
+                title('I vs T');xlabel('Time(s)');ylabel('Current (nA)')
+            end
             xlim([min(cut_ts{i}), max(cut_ts{i})]);
 
             %plot TTLS
             subplot(1,3,3)
-            plot_TTLs(cut_TTLs{i}, cut_ts{i}, TTLnames)
+            plot_TTLs(cut_TTLs{i}, cut_ts{i}, params.TTLnames)
             title('TTLs');xlabel('Time(s)');ylabel('TTLs')
             
             figtitle = sprintf('Trial number %d', i);
-            suptitle(figtitle)
+            suptitle(params.figtitle)
         end
 
-        all_IvT(i,:) = smooth(processed_data{i}(scan_number,:),5);
+        all_IvT(i,:) = smooth(processed_data{i}(params.scan_number,:),5);
         sum_colourplot = sum_colourplot+processed_data{i};
     end
 end
 
 %plot all i vs t
-if plot_all_IvT
+if params.plot_all_IvT
     figure
     hold on
     trials = size(all_IvT,1);
-    rows = floor(sqrt(trials));
+    rows = floor(sqrt(trials))+1;
     cols = ceil(sqrt(trials));    
     for j = 1:size(all_IvT,1)
         subplot(rows,cols,j);
@@ -131,10 +103,11 @@ if plot_all_IvT
     suptitle('All trials I vs T')
 end
 
+%final plot, avg colour plot and individual i vs t
 h = figure;
 subplot(1,2,1)
 avg_colourplot = sum_colourplot/length(processed_data);
-plot_fcvdata(avg_colourplot)    
+plot_fcvdata(avg_colourplot);    
 c = colorbar('eastoutside');
 ylabel(c,'Current(nA)')
 title('Average Colour plot')
@@ -143,5 +116,5 @@ plot(all_IvT')
 hold on
 plot(mean(all_IvT),'k','LineWidth', 2)
 title('I vs T');xlabel('Time(s)');ylabel('Current (nA)')
-set(gcf, 'Position', [300, 300, 1300, 500])
+set(gcf, 'Position', [300, 300, 1300, 500]);
 %Plot avg
