@@ -82,7 +82,7 @@ end
 
 %Malinowski's Fcritical values with different v2 values
 F_critical = zeros(num_trainingsetCVs-1,1);
-alpha = .05;
+%alpha = .05; %TJPedit 02/02/2018 - commented out to take parameter
 for n = 1:num_trainingsetCVs-1
     F_critical(n) = finv(1-alpha,1,num_trainingsetCVs-n);
 end
