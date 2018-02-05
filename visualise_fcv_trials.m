@@ -1,26 +1,9 @@
-<<<<<<< HEAD
 function [processed_data, cut_points, model_cvs, c_predicted, residuals] = ...
     visualise_fcv_trials(fcv_data, params, cut_params, bg_params, chemo_params)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-=======
-function visualise_fcv_trials()
-clear
-close all
-%variables: move these into parameters
-datapath = '..\fcv_data_processing\test data\46_20170208_02 - Variable reward post\';
-datapath = 'I:\GLRA_FCV\Feratu_Coach\20171220_RI60Day1\RI60Day1\';
-datapath = 'C:\Data\GluA1 FCV\GluA1 Data\003\Gazorpazorp\20180118_RI60Day3\RI60Day3\';
-datapath = 'E:\VolatmmetryRoomData\GLRA_FCV\003\Evil_morty\20180115_RI60Day3\RI60_Day3\';
-fig_title = 'zorp RI60 Day 3 Rewarded lever press';
-
-exclude_list = [];%[17,23, 57, 42];
-plot_each =  0; %plot individual trials/cut timestamps
-scan_number = 150;
-plot_all_IvT = 0;
->>>>>>> a6e48586552db2d3b05910d002c15f5611968daa
 
 %initialise variables
 model_cvs = [];
@@ -34,49 +17,10 @@ TTL_data.TTLs = fcv_data.TTLs;
 [cut_data, cut_points, cut_TTLs, cut_ts] = cut_fcv_data(fcv_data.data, TTL_data, fcv_data.ts, cut_params);
 processed_data = bg_subtract(cut_data, cut_params, bg_params);
 
-<<<<<<< HEAD
 if params.apply_chemometrics
     %apply chemometrics 
     [model_cvs, c_predicted, residuals.q, residuals.q_crit, residuals.q_cutoff] = ...
         fcv_chemometrics(processed_data, chemo_params, cut_TTLs, cut_ts);    
-=======
-%meta data to add to structure:
-
-
-no_of_channels = 2;
-[TTLs, ch0_fcv_data, ch1_fcv_data, ts] = read_whole_tarheel_session(datapath, no_of_channels);
-
-[TTL_data.start, TTL_data.end] = extract_TTL_times(TTLs);
-TTL_data.TTLs = TTLs;
-
-params.include.bits = []; %include target_bit
-params.include.window = []; %time(s) before target,time after target
-params.exclude.bits = [];
-params.exclude.window = [];
-params.target_bit = 6;
-params.target_location = 0; %0 = start, 1 = end, 0.5 = middle
-params.ignore_repeats = []; %no of seconds to ignore repeats
-params.sample_rate = 10;
-params.time_align = [10 30]; %window size, [seconds before after]
-params.bg_pos = -2; %seconds relative to target_location
-
-
-bg_adjustments = [5 -.5]; %not implemented yet
-
-
-%cut ch0 data, background and plot
-[cut_data_ch0, cut_points_ch0, cut_TTLs, cut_ts] = cut_fcv_data(ch0_fcv_data, TTL_data, ts, params);
-processed_data_ch0 = bg_subtract(cut_data_ch0, params, bg_params);
-plot_fcv_trials(processed_data_ch0, scan_number,cut_ts, cut_TTLs, plot_each, plot_all_IvT, exclude_list)
-suptitle([fig_title ' Ch0']);
-
-%if two channel recording do the same for ch1
-if no_of_channels == 2
-    [cut_data_ch1, cut_points_ch1, cut_TTLs, cut_ts] = cut_fcv_data(ch1_fcv_data, TTL_data, ts, params);
-    processed_data_ch1 = bg_subtract(cut_data_ch1, params, bg_params);
-    plot_fcv_trials(processed_data_ch1, scan_number,cut_ts, cut_TTLs, plot_each, plot_all_IvT, exclude_list)
-    suptitle([fig_title ' Ch1']);
->>>>>>> a6e48586552db2d3b05910d002c15f5611968daa
 end
 
 h = plot_fcv_trials(model_cvs, cut_ts, cut_TTLs, params, c_predicted);
