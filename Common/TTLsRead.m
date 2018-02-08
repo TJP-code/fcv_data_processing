@@ -1,4 +1,4 @@
-function [ts,logicals] = TTLsRead(fileName)
+function [ts,TTLs] = TTLsRead(fileName)
 
 % Written by ASH
 % 12/2008
@@ -13,7 +13,7 @@ function [ts,logicals] = TTLsRead(fileName)
 % 2 becomes columns 1 thru 8.  Device 1 becomes columns 9 thru 16.  This
 % matches the bit nums from MED-PC programs.
 
-%% Deconvolve TTL's
+% Deconvolve TTL's
 
 % Import Data
 
@@ -38,5 +38,5 @@ for i = 1:length(ttls)
     end
 end
 
-
+TTLs = double(logicals); %TJP edit 08/02/2018
 
