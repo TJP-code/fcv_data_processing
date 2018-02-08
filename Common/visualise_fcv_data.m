@@ -31,7 +31,7 @@ if ~isfield(params,'plotfig') || isempty(params.plotfig)
      params.plotfig = 0;
 end
 if ~isfield(params,'colormap_type') || isempty(params.colormap_type)
-     params.colormap_type = 'jet';
+     params.colormap_type = 'fcv';
 end
 if ~isfield(params,'bg') || isempty(params.bg)
      params.bg = [];
@@ -43,32 +43,27 @@ fcv_CV = fcv_data(:,params.scan_number);
 h = figure;
 subplot(2,3,1);
 %check if need to do invert
-
-imagesc(ts,[0:1:size(fcv_data,1)],fcv_data)
-
-if strcmp(params.colormap_type,'b2r')
-    colormap(b2r(min(fcv_data(:)),max(fcv_data(:))))
-elseif strcmp(params.colormap_type,'fcv')
-    load fcv_colormap
-    colormap(norm_fcv)
-    
-    [vals] = scale_fcv_colorbar(fcv_data);
-    caxis(vals)
+if strcmp(params.colormap_type,'fcv')
+    plot_fcvdata(fcv_data,ts)
 else
+    imagesc(ts,[0:1:size(fcv_data,1)],fcv_data)
+    if strcmp(params.colormap_type,'b2r')
+        colormap(b2r(min(fcv_data(:)),max(fcv_data(:))))
+    end
     colormap(params.colormap_type);
+    ax = gca;
+    ax.YDir = 'normal';
+    title('Colourplot - Applied waveform Vs Time');xlabel('Time(s)');ylabel('Point Number')
+    c = colorbar('westoutside');
+    ylabel(c,'Current(nA)')
 end
 
-ax = gca;
-ax.YDir = 'normal';
-title('Colourplot - Applied waveform Vs Time');xlabel('Time(s)');ylabel('Point Number')
-c = colorbar('westoutside');
-ylabel(c,'Current(nA)')
 hold on
 %plot white lines for scan and point
 plot([ts(1),max(ts)],[params.point_number,params.point_number],'w')
 plot([params.scan_number/10,params.scan_number/10],[0,size(fcv_data,1)],'w')
 if ~isempty(params.bg)
-    plot([params.bg/10,params.bg/10],[0,size(fcv_data,1)],'k')
+    plot([params.bg/10,params.bg/10],[0,size(fcv_data,1)],'b')
 end
 
 subplot(2,3,2);
