@@ -30,8 +30,8 @@ function h = plot_fcvdata(data,ts,lines,clim)
         if ~isempty(lines) 
             %plot white lines for scan and point
             plot([ts(1),max(ts)],[lines.point_number,lines.point_number],'w')
-            plot([lines.scan_number/10,lines.scan_number/10],[0,size(data,1)],'w')
-            plot([lines.bg/10,lines.bg/10],[0,size(data,1)],'b')            
+            plot([ts(lines.scan_number),ts(lines.scan_number)],[0,size(data,1)],'w')
+            plot([ts(lines.bg),ts(lines.bg)],[0,size(data,1)],'b')            
         end
     end
     load fcv_colormap
