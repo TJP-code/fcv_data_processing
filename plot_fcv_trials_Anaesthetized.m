@@ -38,7 +38,7 @@ for i = 1:length(processed_data)
             %             title('TTLs');xlabel('Time(s)');ylabel('TTLs')
             
             figtitle = sprintf('Trial number %d', i);
-            suptitle(params.figtitle)
+            suptitle(params.fig_title)
         end
         
         all_IvT(i,:) = smooth(processed_data{i}(params.scan_number,:),5);
@@ -55,7 +55,7 @@ if params.plot_all_IvT
     cols = ceil(sqrt(trials));
     for j = 1:size(all_IvT,1)
         subplot(rows,cols,j);
-        plot(cut_ts{j},smooth(processed_data{j}(scan_number,:),5),'k')
+        plot(cut_ts{j},smooth(processed_data{j}(params.scan_number,:),5),'k')
         xlim([min(cut_ts{j}), max(cut_ts{j})]);
     end
     suptitle('All trials I vs T')
