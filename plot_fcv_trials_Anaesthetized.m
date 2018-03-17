@@ -11,8 +11,8 @@ for i = 1:length(processed_data)
         if params.plot_each
             %plot colour plot
             figure
-            subplot(1,3,1)
-            plot_fcvdata(processed_data{i},cut_ts{i})    
+            subplot(1,2,1)
+            plot_fcvdata(processed_data{i},cut_ts{i})
             c = colorbar('eastoutside');
             ylabel(c,'Current(nA)')
             if params.apply_chemometrics
@@ -20,27 +20,27 @@ for i = 1:length(processed_data)
             else
                 title('Raw FCV data')
             end
-
+            
             %plot I vs T
-            subplot(1,3,2)
+            subplot(1,2,2)
             if params.apply_chemometrics
-                plot(cut_ts{i},smooth(c_predicted,5),'k')
+                plot(cut_ts{i},smooth(c_predicted{1,i}(1,1:end),5),'k')
                 title('Chemometric I vs T');xlabel('Time(s)');ylabel('Current (nA)')
-            else                
+            else
                 plot(cut_ts{i},smooth(processed_data{i}(params.scan_number,:),5),'k')
                 title('I vs T');xlabel('Time(s)');ylabel('Current (nA)')
             end
             xlim([min(cut_ts{i}), max(cut_ts{i})]);
-
+            
             %plot TTLS
-            subplot(1,3,3)
-            plot_TTLs(cut_TTLs{i}, cut_ts{i}, params.TTLnames)
-            title('TTLs');xlabel('Time(s)');ylabel('TTLs')
+            %             subplot(1,3,3)
+            %             plot_TTLs(cut_TTLs{i}, cut_ts{i}, params.TTLnames)
+            %             title('TTLs');xlabel('Time(s)');ylabel('TTLs')
             
             figtitle = sprintf('Trial number %d', i);
             suptitle(params.figtitle)
         end
-
+        
         all_IvT(i,:) = smooth(processed_data{i}(params.scan_number,:),5);
         sum_colourplot = sum_colourplot+processed_data{i};
     end
@@ -52,7 +52,7 @@ if params.plot_all_IvT
     hold on
     trials = size(all_IvT,1);
     rows = floor(sqrt(trials))+1;
-    cols = ceil(sqrt(trials));    
+    cols = ceil(sqrt(trials));
     for j = 1:size(all_IvT,1)
         subplot(rows,cols,j);
         plot(cut_ts{j},smooth(processed_data{j}(scan_number,:),5),'k')
@@ -65,7 +65,7 @@ end
 h = figure;
 subplot(1,2,1)
 avg_colourplot = sum_colourplot/length(processed_data);
-plot_fcvdata(avg_colourplot);    
+plot_fcvdata(avg_colourplot);
 c = colorbar('eastoutside');
 ylabel(c,'Current(nA)')
 title('Average Colour plot')
