@@ -1,4 +1,4 @@
-% close all
+close all
 clear all
 
 %Directory containing all files
@@ -20,7 +20,7 @@ subfolder6 = '06_DrugPeriod\';
 subfolders = {subfolder1,subfolder2,subfolder3,subfolder4,subfolder5,subfolder6};
 
 %Set file path
-datapath = 'E:\Marios aFCV\GLRA_002\GLRA002_20170606_GLRA53.5f\05_Baseline_PreDrug\';
+datapath = 'E:\Marios aFCV\GLRA_002\GLRA002_20170606_GLRA53.5f\06_DrugPeriod\';
 
 %Set number of channels
 no_of_channels = 1;
@@ -48,17 +48,18 @@ cut_params.trimData = [0 15]; %crop long files between a [start end] time in sec
 
 %visualisation params
 params.trial_exclude_list = [];%[17,23, 57, 42];
-params.plot_each =  0; %plot individual trials/cut timestamps
+params.plot_each =  1; %plot individual trials/cut timestamps
 params.scan_number = 317;
 params.plot_all_IvT = 0;
 params.apply_chemometrics = 1; %do chemometrics
-params.figtitle = 'Amplitude Response Curve';
+params.fig_title = 'Amplitude Response Curve';
 
 %Read in separate files for analysis
 [fileNames, TTLs, ch0_fcv_data, ~, ts] = read_separate_tarheel_files(datapath, no_of_channels);
 %Background subtract data
 processed_data = bg_subtract_aFCV(ch0_fcv_data, cut_params, bg_params);
 [processed_data, ts] = trim_data_aFCV(processed_data, cut_params, ts);
+
 
 %% Apply chemometrics
 
@@ -76,7 +77,7 @@ end
 
 %% Plot
 h = plot_fcv_trials_Anaesthetized(model_cvs, ts, TTLs, params, c_predicted);
-%suptitle([params.fig_title]);
+suptitle([params.fig_title]);
 
 
 %calculate max value of DA i.e. DA peak
@@ -97,6 +98,7 @@ end
 
 
 
+
 delimiter = '_'; %delimiter used between filename sections
 remove = 1; % Boolean, True = remove the target text from the output, False = leave target text in output
 
@@ -109,4 +111,22 @@ for i = 1:length(fileNames)
     stimStrength(i) = str2double(filenameSplitter(fileNames{i},delimiter,target,remove));
 end
 
+
+% %To Do: Save data
+% %raw
+% fileNames, TTLs, ch0_fcv_data, ~, ts
+% %subtracted
+% processed_data, ts
+% %Chemometrics
+% model_cvs, c_predicted, residuals.q, residuals.q_crit, residuals.q_cutoff
+% %Summary
+% DA_max
+% DA_latency
+% %Info
+% stimFreq
+% stimPulses
+% stimStrength
+
+%Save figures
+%Add filename to figure suptitles for individuals, or use as filename for saving images
 
