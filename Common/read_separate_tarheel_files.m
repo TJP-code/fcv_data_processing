@@ -34,7 +34,7 @@ for i = 1:length(files)
     if no_of_channels == 2
         all_ch1_data{i} = [temp_ch1_fcv_data];
     end
-    all_ttls = [all_ttls; double(tempTTLs)];   
+    all_ttls{i} = double(tempTTLs);   
 end
 
 TTLs = all_ttls; 
