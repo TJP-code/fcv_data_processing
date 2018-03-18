@@ -12,8 +12,8 @@ bg_params.sample_freq = 58820;
 
 
 %chemometric variables
-chemo_params.cv_matrix = dlmread('C:\Users\Marios\Documents\GitHub\fcv_data_processing\chemoset\cvmatrix1.txt');
-chemo_params.conc_matrix = dlmread('C:\Users\Marios\Documents\GitHub\fcv_data_processing\chemoset\concmatrix1.txt');
+chemo_params.cv_matrix = dlmread('C:\Users\mario\Documents\GitHub\fcv_data_processing\chemoset\cvmatrix1.txt');
+chemo_params.conc_matrix = dlmread('C:\Users\mario\Documents\GitHub\fcv_data_processing\chemoset\concmatrix1.txt');
 chemo_params.pcs = [];
 chemo_params.alpha = 0.05;
 chemo_params.plotfigs = 0;
@@ -22,7 +22,7 @@ chemo_params.plotfigs = 0;
 cut_params.sample_rate = 10;
 cut_params.target_pos = 5; %time of stimulation
 cut_params.bg_pos = -0.5; %seconds relative target
-cut_params.trimData = [0 15]; %crop long files between a [start end] time in seconds
+cut_params.trimData = [0 40]; %crop long files between a [start end] time in seconds
 
 
 %visualisation params
@@ -36,7 +36,7 @@ params.fig_title = 'Amplitude Response Curve';
 %% Set up data path and subfolder structure
 
 %Directory containing all files
-directory = 'D:\Marios aFCV\GLRA_002\';
+directory = 'E:\Marios aFCV\GLRA_002\';
 %Pull out all folders within the directory, i.e. individual subjects
 folderlist = dir(directory);
 folders = {folderlist.name};
@@ -46,6 +46,9 @@ folders(~isfolder)=[];
 %find list of relevant folders starting with GLRA002 and update folders variable
 relevantFolders  = strfind([folders], 'GLRA002');
 folders = folders(~cellfun(@isempty, relevantFolders));
+%Manual Override
+%folders = {'GLRA002_20170524_GLRA50.6d','GLRA002_20170524_GLRA51.6c','GLRA002_20170524_GLRA64.1e','GLRA002_20170601_GLRA64.1c','GLRA002_20170606_GLRA52.4d','GLRA002_20170606_GLRA53.5f','GLRA002_20170920_GLRA56.2a','GLRA002_20170920_GLRA62.4b','GLRA002_20170922_GLRA65.1a','GLRA002_20170925_GLRA58.3c','GLRA002_20170925_GLRA58.3d','GLRA002_20170927_GLRA58.3b','GLRA002_20170927_GLRA65.2a'};
+
 
 %list of important subfolders containing session specific data
 subfolder1 = '\01_Stabilization\';
@@ -93,15 +96,15 @@ for i= 1:length(folders)
         end
         
         %% Plot
-        %h = plot_fcv_trials_Anaesthetized(model_cvs, processed_ts, TTLs, params, c_predicted);
-        %suptitle([params.fig_title]);
+%         h = plot_fcv_trials_Anaesthetized(model_cvs, processed_ts, TTLs, params, c_predicted);
+%         suptitle([params.fig_title]);
         
         
         %calculate max value of DA i.e. DA peak
         baseline = (cut_params.target_pos + cut_params.bg_pos)*cut_params.sample_rate;
         % check for peak dopamine between baseline and max_end seconds later
         % (important to avoid large values caused by post-stim drift
-        max_end = 10;
+        max_end = 5;
         max_end = max_end*cut_params.sample_rate;
         DA_max = [];
         DA_latency = [];
@@ -152,22 +155,4 @@ for i= 1:length(folders)
   data(i).stim_params.stimStrength = stimStrength;
 end
 
-
-% %To Do: Save data
-% %raw
-% fileNames, TTLs, ch0_fcv_data, ~, ts
-% %subtracted
-% processed_data, ts
-% %Chemometrics
-% model_cvs, c_predicted, residuals.q, residuals.q_crit, residuals.q_cutoff
-% %Summary
-% DA_max
-% DA_latency
-% %Info
-% stimFreq
-% stimPulses
-% stimStrength
-
-%Save figures
-%Add filename to figure suptitles for individuals, or use as filename for saving images
 
