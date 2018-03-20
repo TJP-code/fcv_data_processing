@@ -12,8 +12,8 @@ bg_params.sample_freq = 58820;
 
 
 %chemometric variables
-chemo_params.cv_matrix = dlmread('C:\Users\mario\Documents\GitHub\fcv_data_processing\chemoset\cvmatrix1.txt');
-chemo_params.conc_matrix = dlmread('C:\Users\mario\Documents\GitHub\fcv_data_processing\chemoset\concmatrix1.txt');
+chemo_params.cv_matrix = dlmread('C:\Users\mpanagi\Documents\GitHub\fcv_data_processing\chemoset\cvmatrix1.txt');
+chemo_params.conc_matrix = dlmread('C:\Users\mpanagi\Documents\GitHub\fcv_data_processing\chemoset\concmatrix1.txt');
 chemo_params.pcs = [];
 chemo_params.alpha = 0.05;
 chemo_params.plotfigs = 0;
@@ -22,7 +22,7 @@ chemo_params.plotfigs = 0;
 cut_params.sample_rate = 10;
 cut_params.target_pos = 5; %time of stimulation
 cut_params.bg_pos = -0.5; %seconds relative target
-cut_params.trimData = [0 40]; %crop long files between a [start end] time in seconds
+cut_params.trimData = [0 20]; %crop long files between a [start end] time in seconds
 
 
 %visualisation params
