@@ -60,7 +60,7 @@ subfolder3 = '\03_STIMRESPONSE_VARY_PULSES\';
 subfolder4 = '\04_Stabilization_Period2\';
 subfolder5 = '\05_Baseline_PreDrug\';
 subfolder6 = '\06_DrugPeriod\';
-subfolders = {subfolder5};
+subfolders = {subfolder6};
 % subfolders = {subfolder1,subfolder2,subfolder3,subfolder4,subfolder5,subfolder6};
 
 
@@ -234,6 +234,7 @@ end
 
 
 %%
+%save('E:\Marios aFCV\GLRA_002\DataAnalysis\GLRA002_05BaselinePreDrugData', 'data', 'summary', 'avg_DA_WT','avg_DA_cal_WT' , 'avg_DA_KO','avg_DA_cal_KO')
 
 
 

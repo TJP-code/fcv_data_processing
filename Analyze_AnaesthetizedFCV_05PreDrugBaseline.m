@@ -234,6 +234,7 @@ end
 
 
 %%
+save('E:\Marios aFCV\GLRA_002\DataAnalysis\GLRA002_05BaselinePreDrugData', 'data', 'summary', 'avg_DA_WT','avg_DA_cal_WT' , 'avg_DA_KO','avg_DA_cal_KO')
 
 
 
