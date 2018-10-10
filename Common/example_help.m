@@ -33,11 +33,11 @@
 %                                                                                                   
 %                             
 % Examples:              (if an example is required/helpful)
-%    [output] = function_name(inputparams)
+%   [output] = function_name(inputparams)
 %               
 
 % Author(s):
-%            TJP & MP 21/02/2017                                                                    
+%    TJP & MP 21/02/2017                                                                    
 %                                                                                                       
 %                                                                                                   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   

@@ -1,7 +1,8 @@
 function h = plot_TTLs(TTLs, ts, TTLnames)
-%function h = plot_TTLs(TTLs)
+
+%plot_TTLs plots TTL data
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function h = plot_TTLs(TTLs)
 %
 % plot_TTLs
 %
@@ -17,12 +18,10 @@ function h = plot_TTLs(TTLs, ts, TTLnames)
 %   output:
 %           h = handle to figure
 %
-%
-%   future feature:
-%                   extra parameter to describe TTL channels
-%                   customise title?
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Authors:
+%       TJP & MP
+
+
 if nargin < 2; ts = [0:0.1:(size(TTLs,1)/10)-0.1]; end;
 if nargin < 3; TTLnames = []; end;
 
