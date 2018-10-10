@@ -23,6 +23,7 @@ function h = plot_TTLs(TTLs, ts, TTLnames)
 %                   customise title?
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if nargin < 2; ts = [0:0.1:(size(TTLs,1)/10)-0.1]; end;
 if nargin < 3; TTLnames = []; end;
 
 %Modify TTLs to allow for separate lines

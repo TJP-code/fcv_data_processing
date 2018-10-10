@@ -22,7 +22,7 @@ function [processed_data] = process_raw_fcv_data(filename,params)
 %            sample_freq - data sample frequency during application of fcv waveform             %    
 %                          default 58820 for a 500 point file, 117640 for 1000 point file       %    
 %            point_avg   - number of points for kernal average default 8 - currently disabled   %    
-%                          as of 10/05/2017 TJP                                                 %    
+%                         as of 10/05/2017 TJP                                                 %    
 %                                                                                               %    
 % --outputs--                                                                                   %    
 %   processed_data       - background subtracted, filtered and smoothed data                    %    
