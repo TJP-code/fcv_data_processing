@@ -5,14 +5,15 @@ function [TTL_start, TTL_end] = extract_TTL_times(TTLs)
 % function [TTL_start, TTL_end] = extract_TTL_times(TTLs)
 %
 % Takes TTL file containing n×m matrix sample by TTL bit number and
-% outputs start and end scan numbers of TTL pulses.
+% outputs start and end samples numbers of TTL pulses.
+% Sample number correspond to fcv scan number.
 %
 % Inputs:
 %       TTLs        - TTL data (n×m matrix, number of samples×number of TTL channels)
 %
 % Outputs: 
-%       TTL_start   - n×2 matrix containing start scans of TTL data in format [scan number, TTL bit]
-%       TTL_end     - n×2 matrix containing end  scans of TTL data in format [scan number, TTL bit]
+%       TTL_start   - n×2 matrix containing start samples of TTL data in format [sample number, TTL bit]
+%       TTL_end     - n×2 matrix containing end  samples of TTL data in format [sample number, TTL bit]
 %
 % Authors: 
 %       TJP & MP 09/05/2017

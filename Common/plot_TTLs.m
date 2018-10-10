@@ -3,11 +3,11 @@ function h = plot_TTLs(TTLs, ts, TTLnames)
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%   plot_TTLs
+% plot_TTLs
 %
-%   Takes TTL data read from tarheel file using TTLsRead and plots.
+% Takes TTL data read from tarheel file using TTLsRead and plots.
 %
-%   inputs:
+% inputs:
 %           TTLs - data read from tarheel .txt file using TTLsRead (1 x n Cell array containing i x j (time x TTL number)matrices )
 %           ts   - time stamps from tarheel .txt file using TTLsRead (1 x n matrix)
 %           TTLnames - Cell array of TTL names (1 x 16) e.g.
