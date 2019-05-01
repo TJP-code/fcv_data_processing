@@ -73,11 +73,36 @@ if isempty(cut_points)
     error('ERROR: No cut points were found. No instance of target bit detected.')
 end
 
+time_align_win_length = (params.time_align(1)+params.time_align(2))*10;
+s_fpadding = [];s_tpadding = []; s_ts_pad = [];
+e_fpadding = [];e_tpadding = []; e_ts_pad = [];
+
 %for each cut point
 for i = 1:size(cut_points,1)
-    cut_data{i} = fcv_data(:,[cut_points(i,1):cut_points(i,2)]);
-    cut_TTLs{i} = TTL_data.TTLs([cut_points(i,1):cut_points(i,2)],:);
-    cut_ts{i} = ts([cut_points(i,1):cut_points(i,2)]);
+    
+    %check if data will be less than window (i.e. the start or the end is
+    %cut off, will only happen in first or last trial
+    
+    %first trial
+    
+    actual_win_length = cut_points(i,2)-cut_points(i,1)+1;
+    if i == 1 && (actual_win_length<time_align_win_length)
+        s_fpadding = nan(size(fcv_data,1),time_align_win_length-actual_win_length);
+        s_tpadding = nan(size(TTL_data.TTLs,2),time_align_win_length-actual_win_length);
+        s_ts_pad = nan(1,time_align_win_length-actual_win_length);
+    %last trial
+    elseif i == size(cut_points,1) && (actual_win_length<time_align_win_length)
+        e_fpadding = nan(size(fcv_data,1),time_align_win_length-actual_win_length);
+        e_tpadding = nan(size(TTL_data.TTLs,2),time_align_win_length-actual_win_length);
+        e_ts_pad = nan(1,time_align_win_length-actual_win_length);
+    else
+        s_fpadding = [];s_tpadding = []; s_ts_pad = [];
+        e_fpadding = [];e_tpadding = []; e_ts_pad = [];
+    end
+    
+    cut_data{i} = [s_fpadding,fcv_data(:,[cut_points(i,1):cut_points(i,2)]),e_fpadding];
+    cut_TTLs{i} = [s_tpadding;TTL_data.TTLs([cut_points(i,1):cut_points(i,2)],:);e_tpadding'];
+    cut_ts{i} = [s_ts_pad,ts([cut_points(i,1):cut_points(i,2)]),e_ts_pad];
       
 end
 
