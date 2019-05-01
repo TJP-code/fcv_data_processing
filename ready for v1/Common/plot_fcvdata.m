@@ -35,13 +35,13 @@ if isempty(ts)
         plot([lines.bg,lines.bg],[0,size(data,1)],'b')            
     end
 else
-    h = imagesc(ts,[0:1:size(data,1)],data);
+    h(1) = imagesc(ts,[0:1:size(data,1)],data);
     hold on
     if ~isempty(lines) 
         %plot white lines for scan and point
-        plot([ts(1),max(ts)],[lines.point_number,lines.point_number],'w')
-        plot([ts(lines.scan_number),ts(lines.scan_number)],[0,size(data,1)],'w')
-        plot([ts(lines.bg),ts(lines.bg)],[0,size(data,1)],'b')            
+        h(2) = plot([ts(1),max(ts)],[lines.point_number,lines.point_number],'w');
+        h(3) = plot([ts(lines.scan_number),ts(lines.scan_number)],[0,size(data,1)],'w');
+        h(4) = plot([ts(lines.bg),ts(lines.bg)],[0,size(data,1)],'b');            
     end
 end
 load fcv_colormap
