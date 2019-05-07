@@ -113,46 +113,48 @@ for i = 1:length(processed_data)
     end
 end
 
+if params.plot_main_figs == 1
 %plot all i vs t
-if params.plot_all_IvT
-    figure
-    hold on
-    trials = size(all_IvT,1);
-    rows = floor(sqrt(trials))+1;
-    cols = ceil(sqrt(trials));    
-    for j = 1:size(all_IvT,1)
-        subplot(rows,cols,j);
-        plot(cut_ts{j},smooth(processed_data{j}(scan_number,:),5),'k')
-        xlim([min(cut_ts{j}), max(cut_ts{j})]);
+    if params.plot_all_IvT
+        figure
+        hold on
+        trials = size(all_IvT,1);
+        rows = floor(sqrt(trials))+1;
+        cols = ceil(sqrt(trials));    
+        for j = 1:size(all_IvT,1)
+            subplot(rows,cols,j);
+            plot(cut_ts{j},smooth(processed_data{j}(scan_number,:),5),'k')
+            xlim([min(cut_ts{j}), max(cut_ts{j})]);
+        end
+        suptitle('All trials I vs T')
     end
-    suptitle('All trials I vs T')
-end
 
-%final plot, avg colour plot and individual i vs t
-h = figure;
-subplot(1,3,1)
+    %final plot, avg colour plot and individual i vs t
+    h = figure;
+    subplot(1,3,1)
 
-%check for nans so averaging is correct
+    %check for nans so averaging is correct
 
 
-ogavg_colourplot = ogsum_colourplot/length(processed_data);
-avg_colourplot = nanmean(sum_colourplot,3);
-plot_fcvdata(avg_colourplot);    
-originalSize1 = get(gca, 'Position');
-c = colorbar('eastoutside');
-title('Average Colour plot')
-set(gca, 'Position', originalSize1);
+    ogavg_colourplot = ogsum_colourplot/length(processed_data);
+    avg_colourplot = nanmean(sum_colourplot,3);
+    plot_fcvdata(avg_colourplot);    
+    originalSize1 = get(gca, 'Position');
+    c = colorbar('eastoutside');
+    title('Average Colour plot')
+    set(gca, 'Position', originalSize1);
 
-subplot(1,3,2)
-plot(all_IvT')
-hold on
-plot(mean(all_IvT),'k','LineWidth', 2)
-title('I vs T');xlabel('Time(s)');ylabel('Current (nA)')
-set(gcf, 'Position', [300, 300, 1900, 600]);
-%Plot avg
-subplot(1,3,3)
-imagesc(all_IvT)
-colorbar
-ax = gca;
+    subplot(1,3,2)
+    plot(all_IvT')
+    hold on
+    plot(mean(all_IvT),'k','LineWidth', 2)
+    title('I vs T');xlabel('Time(s)');ylabel('Current (nA)')
+    set(gcf, 'Position', [300, 300, 1900, 600]);
+    %Plot avg
+    subplot(1,3,3)
+    imagesc(all_IvT)
+    colorbar
+    ax = gca;
     ax.YDir = 'normal';
     colormap(ax,'parula')
+end
