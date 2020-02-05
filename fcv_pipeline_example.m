@@ -7,10 +7,11 @@ close all
 % all data processing steps containing within the toolbox
 %
 % Use case:
-% Visualise fcv data at the point of a magasine entry from a single
+% Visualise fcv data at the point of a magazine entry from a single
 % recording session. 
-% Generating a reward delivery triggered chemometric plot, with indivudual
+% Generating a reward delivery triggereded chemometric plot, with indivudual
 % trial and average traces, generate an average chemometric colour plot
+%
 %
 % Steps:
 %
@@ -43,6 +44,10 @@ close all
 %
 %   To plot trials fcv colour plot and TTLs set params.plot_each = 1 
 %
+% NOTE:
+% See visualise_fcv_trials for a similar function which does these same
+% steps
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -53,7 +58,7 @@ close all
 bg_params.filt_freq = 2000; %we found 2000Hz for 2 channel data gave a smoother CV
 bg_params.sample_freq = 58820; 
 
-%chemometric variables
+%chemometric variables 
 chemo_params.cv_matrix = dlmread('..\fcv_data_processing\chemoset\cvmatrix2.txt');
 chemo_params.conc_matrix = dlmread('..\fcv_data_processing\chemoset\concmatrix2.txt');
 chemo_params.pcs = []; %let the function decide how many principal components to use
@@ -65,7 +70,7 @@ cut_params.include.bits = []; %include target_bit
 cut_params.include.window = []; %time(s) before target,time after target
 cut_params.exclude.bits = [];
 cut_params.exclude.window = [];
-cut_params.target_bit = 1;
+cut_params.target_bit = 1; %1 corresponds to reward delivery in magazine (see fcv_data.TTLnames)
 cut_params.target_location = 0; %0 = start, 1 = end, 0.5 = middle
 cut_params.ignore_repeats = []; %no of seconds to ignore repeats
 cut_params.sample_rate = 10;
@@ -81,16 +86,16 @@ bg_adjustments = [5 -.5]; %not implemented yet
 %visualisation params
 fcv_data.TTLnames = {'Reward', 'Head Entry', 'Head Exit', 'Left Lever Press', 'Left Lever Out', 'Right Lever Press', 'Right Lever Out', 'Fan', '', '', '', '', '', '', '', ''};
 params.trial_exclude_list = [];%[17,23, 57, 42];
-params.plot_each =  0; %plot individual trials/cut timestamps
+params.plot_each =  1; %plot individual trials/cut timestamps
 params.scan_number = 150; %point in scan to plot if chemometrics not applied
 params.apply_chemometrics = 1; %do chemometric processing, set to 0 to just average the raw fcv data
 
 %read in tarheel session
-datapath = 'C:\Data\GluA1 FCV\GluA1 Data\003\Gazorpazorp\20180118_RI60Day3\RI60Day3\';
-no_of_channels = 2;
+datapath = 'E:\c drive bk\Data\GluA1 FCV\GluA1 Data\003\Gazorpazorp\20180118_RI60Day3\RI60Day3\';
+no_of_channels = 2; %important step
 [fcv_data.TTLs,  ch0_fcv_data, ch1_fcv_data,  fcv_data.ts] = read_whole_tarheel_session(datapath, no_of_channels);
 
-fcv_data.data = ch0_fcv_data;
+fcv_data.data = ch0_fcv_data; %here we look at only data from channel 0
 params.fig_title = 'zorp RI60 Day 3 Rewarded lever press ch0';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -135,6 +140,7 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Plot data
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 sum_colourplot = zeros(size(processed_data{1}));
@@ -156,7 +162,7 @@ for i = 1:length(processed_data)
             %plot I vs T
             subplot(1,3,2)
             if params.apply_chemometrics
-                plot(cut_ts{i},smooth(c_predicted,5),'k')
+                plot(cut_ts{i},smooth(c_predicted{i}(1,:),5),'k')
                 title('Chemometric I vs T');xlabel('Time(s)');ylabel('Current (nA)')
             else                
                 plot(cut_ts{i},smooth(processed_data{i}(params.scan_number,:),5),'k')
@@ -166,14 +172,20 @@ for i = 1:length(processed_data)
 
             %plot TTLS
             subplot(1,3,3)
-            plot_TTLs(cut_TTLs{i}, cut_ts{i}, params.TTLnames)
+            plot_TTLs(cut_TTLs{i}, cut_ts{i}, fcv_data.TTLnames)
             title('TTLs');xlabel('Time(s)');ylabel('TTLs')
             
             figtitle = sprintf('Trial number %d', i);
-            suptitle(params.figtitle)
+            suptitle(params.fig_title)
+            set(gcf, 'Position', [300, 300, 1300, 500]);
         end
 
         sum_colourplot = sum_colourplot+processed_data{i};
+        if params.apply_chemometrics
+             all_IvT(i,:) = smooth(c_predicted{i}(1,:),5);
+        else
+             all_IvT(i,:) = smooth(processed_data{i}(params.scan_number,:),5);
+        end
     end
 end
 

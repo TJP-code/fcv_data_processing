@@ -45,7 +45,8 @@ for i = 1:length(cut_data)
 end
 
 function [h, all_IvT, avg_colourplot] = plot_fcv_trials(processed_data, cut_ts, cut_TTLs, params, c_predicted)
-
+h = 0;
+avg_colourplot = [];
 %option to plot/prune
 
 %plot avg IvsT, plus individual trials, look for outliers
