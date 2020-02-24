@@ -18,6 +18,12 @@ function [filepaths] = getFCVfilepaths(dirpath)
 %
 % get all folder and fils in directory path (dirpath)
 folderdirectory = dir(dirpath);
+
+% Check to make sure directory path is valid
+if (size(folderdirectory) == [0 1])
+    error('Invalid path')
+end
+
 % Remove all folders and leave only files
 filepaths = folderdirectory(~[folderdirectory.isdir]);
 % Remove mac hidden files, these start with '._' . N.B. You should not have '._' in any other legitimate part of your filenames when naming files!
@@ -27,5 +33,8 @@ filepaths_name = {filepaths.name};
 fileindices = cellfun(@isempty,regexp(filepaths_name,'\._'));
 filepaths = filepaths(fileindices);
 end
+
+
+
 
 
