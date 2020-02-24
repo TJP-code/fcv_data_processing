@@ -32,8 +32,12 @@ filepaths = folderdirectory(~[folderdirectory.isdir]);
 filepaths_name = {filepaths.name};
 fileindices = cellfun(@isempty,regexp(filepaths_name,'\._'));
 filepaths = filepaths(fileindices);
-end
 
+% Remove all .txt files that accompany tarheel FCV files
+filepaths_name = {filepaths.name};
+myindices = find(cellfun(@isempty,strfind(filepaths_name,'txt')));
+filepaths = filepaths(myindices);
+end
 
 
 
