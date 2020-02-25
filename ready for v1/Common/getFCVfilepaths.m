@@ -30,7 +30,7 @@ filepaths = folderdirectory(~[folderdirectory.isdir]);
 % Regexp is used here to find these files, so any instance of '._' ina
 % filename will be removed. 
 filepaths_name = {filepaths.name};
-fileindices = cellfun(@isempty,regexp(filepaths_name,'\._'));
+fileindices = cellfun(@isempty,regexp(filepaths_name,'\.'));
 filepaths = filepaths(fileindices);
 
 % Remove all .txt files that accompany tarheel FCV files
