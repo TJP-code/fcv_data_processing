@@ -10,16 +10,22 @@ function [TTLs, ch0_fcv_data, ch1_fcv_data, ts] = read_whole_tarheel_session(dat
 %
 if nargin < 2; no_of_channels = 2; end
 
-filelist = dir(datapath);
-if (size(filelist) == [0 1])
-    error('Invalid path')
-end
-files = {filelist.name};
-isfolder = cell2mat({filelist.isdir});
-files(isfolder)=[];
-myindices = find(~cellfun(@isempty,strfind(files,'txt')));
-files([myindices])=[]; 
 
+% % Code below replaced by getFCVfilepaths() function velow which also deals
+% % with mac/apple hidden files
+% filelist = dir(datapath);
+% if (size(filelist) == [0 1])
+%     error('Invalid path')
+% end
+% files = {filelist.name};
+% isfolder = cell2mat({filelist.isdir});
+% files(isfolder)=[];
+% myindices = find(~cellfun(@isempty,strfind(files,'txt')));
+% files([myindices])=[]; 
+
+% Find filenames for all FCV files in folder [as specificed by 'datapath']
+filepaths = getFCVfilepaths(datapath);
+files = {filepaths.name};
 
 
 all_ch0_data = []; all_ch1_data = [];all_ttls = [];
