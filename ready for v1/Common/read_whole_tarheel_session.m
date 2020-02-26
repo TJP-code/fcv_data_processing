@@ -5,6 +5,7 @@ function [TTLs, ch0_fcv_data, ch1_fcv_data, ts] = read_whole_tarheel_session(dat
 % TJP & MP 09/05/2017
 % todo: write help
 %
+% no_of_channels - set to 1 or 2. With 1 channel all data is output in ch0_fcv_data
 % 10/1/2018 - added ts for whole session
 %
 if nargin < 2; no_of_channels = 2; end

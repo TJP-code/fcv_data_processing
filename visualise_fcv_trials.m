@@ -17,6 +17,7 @@ TTL_data.TTLs = fcv_data.TTLs;
 [cut_data, cut_points, cut_TTLs, cut_ts] = cut_fcv_data(fcv_data.data, TTL_data, fcv_data.ts, cut_params);
 processed_data = bg_subtract(cut_data, cut_params, bg_params);
 
+
 if params.apply_chemometrics
     %apply chemometrics 
     [model_cvs, c_predicted, residuals.q, residuals.q_crit, residuals.q_cutoff] = ...

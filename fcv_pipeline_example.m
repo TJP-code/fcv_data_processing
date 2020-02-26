@@ -66,12 +66,12 @@ chemo_params.alpha = 0.05;
 chemo_params.plotfigs = 0; %we've decided not to plot the chemometrics on indivudual trials, set to 1 to see the output
 
 %cutting variables
-cut_params.include.bits = []; %include target_bit
-cut_params.include.window = []; %time(s) before target,time after target
-cut_params.exclude.bits = [];
-cut_params.exclude.window = [];
-cut_params.target_bit = 1; %1 corresponds to reward delivery in magazine (see fcv_data.TTLnames)
-cut_params.target_location = 0; %0 = start, 1 = end, 0.5 = middle
+cut_params.target_bit = 1; %TTL to cut around (1 corresponds to reward delivery in magazine (see fcv_data.TTLnames))
+cut_params.include.bits = []; %TTLs that must also occur near target TTL
+cut_params.include.window = []; %time(s) around target TTL in which include bits must occur [s before target,time after target];
+cut_params.exclude.bits = []; %If these bits occur near target TTL, exclude this trial
+cut_params.exclude.window = []; %time window around target TTL to look for exclude TTL
+cut_params.target_location = 0; %Where exactly in the duration of the target TTL to cut around 0 = start, 1 = end, 0.5 = middle
 cut_params.ignore_repeats = []; %no of seconds to ignore repeats
 cut_params.sample_rate = 10;
 cut_params.time_align = [10 30]; %window size, [seconds before after]

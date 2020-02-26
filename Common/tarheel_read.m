@@ -7,7 +7,7 @@ function [fcv_header, ch0_fcv_data, ch1_fcv_data] = tarheel_read(filename,no_of_
 % Reads tarheel fcv raw data into a matrix of 1000×samples for a 1 channel reacording
 % two 500×samples for two channel recordings (default)
 %
-%
+% no_of_channels - set to 1 or 2. With 1 channel all data is output in ch0_fcv_data
 %
 % TJP 20/3/2017
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

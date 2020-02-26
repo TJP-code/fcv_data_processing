@@ -7,7 +7,7 @@ function [cut_data, cut_points, cut_TTLs, cut_ts] = cut_fcv_data(fcv_data, TTL_d
 %
 % 2 - window is a stupid name, should be time window or similar - Window
 %
-% the way the window works is that trials which contain other TTLs within a window around the
+% The way the window works is that trials which contain other TTLs within a window around the
 % target TTL are included(kept) or excluded(ignored?) i.e. lever press as
 % target, trials that have a reward delivery within a window of 2 seconds before or 5 seconds after
 %
@@ -15,7 +15,7 @@ function [cut_data, cut_points, cut_TTLs, cut_ts] = cut_fcv_data(fcv_data, TTL_d
 % To-do fix issue of ignoring/excluding instances of the target ttl, i.e.
 % isolate a lever press with no other lever presses within the time window (window)
 %
-% To-do: fix issue when data cut points exceed teh duration of the recorded data. 
+% To-do: fix issue when data cut points exceed the duration of the recorded data. 
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5%%
 
@@ -25,15 +25,21 @@ function [cut_data, cut_points, cut_TTLs, cut_ts] = cut_fcv_data(fcv_data, TTL_d
 
 %If any buffers are used, all bits must have a corresponding window
 
-% params.include.bits = [1; 2]; %include target_bit
-% params.include.window = [0 2; 1 1]; %time(s) before target,time after target
-% params.exclude.bits = [];
-% params.exclude.window = [];
-% params.target_bit = 7;
-% params.target_location = 0; %0 = start, 1 = end, 0.5 = middle %Rounds up to nearest scan
-% params.ignore_repeats = [1]; %no of seconds to ignore repeats
-% params.sample_rate = 10;
-% params.time_align = [10 10];
+% params.target_bit = 7; TTL to cut a trial around
+% params.target_location = 0; %TTLs have a duration, they start when the TTL value goes up and end when it come back down, 
+                              %for example a light coming on for 5 seconds. This parameter allows you to choose whether to cut at 
+                              %TTL onset (target_location = 0), TTL termination (target_location = 1) or anywhere inbetween e.g. 0.5
+                              %0 = start, 1 = end, 0.5 = middle %Rounds up to nearest scan
+                              
+% cut_params.include.bits = []; %TTLs that must also occur near target TTL
+% cut_params.include.window = []; %time(s) around target TTL in which include bits must occur [s before target,time after target];
+% cut_params.exclude.bits = []; %If these bits occur near target TTL, exclude this trial
+% cut_params.exclude.window = []; %time window around target TTL to look for exclude TTL
+% cut_params.ignore_repeats = []; %no of seconds to ignore repeats
+% cut_params.sample_rate = 10;
+% cut_params.time_align = [10 30]; %window size, [seconds before after]
+% cut_params.bg_pos = -2; %seconds relative to target_location
+
 
 %exclude cut files with more than x center bits???
 
@@ -81,17 +87,13 @@ e_fpadding = [];e_tpadding = []; e_ts_pad = [];
 for i = 1:size(cut_points,1)
     
     %check if data will be less than window (i.e. the start or the end is
-    %cut off, will only happen in first or last trial
-    
-    %first trial
     
     actual_win_length = cut_points(i,2)-cut_points(i,1)+1;
-    if i == 1 && (actual_win_length<time_align_win_length)
+    if actual_win_length<time_align_win_length)
         s_fpadding = nan(size(fcv_data,1),time_align_win_length-actual_win_length);
         s_tpadding = nan(size(TTL_data.TTLs,2),time_align_win_length-actual_win_length);
         s_ts_pad = nan(1,time_align_win_length-actual_win_length);
-    %last trial
-    elseif i == size(cut_points,1) && (actual_win_length<time_align_win_length)
+    elseif actual_win_length<time_align_win_length
         e_fpadding = nan(size(fcv_data,1),time_align_win_length-actual_win_length);
         e_tpadding = nan(size(TTL_data.TTLs,2),time_align_win_length-actual_win_length);
         e_ts_pad = nan(1,time_align_win_length-actual_win_length);
