@@ -89,7 +89,7 @@ for i = 1:size(cut_points,1)
     %check if data will be less than window (i.e. the start or the end is
     
     actual_win_length = cut_points(i,2)-cut_points(i,1)+1;
-    if actual_win_length<time_align_win_length)
+    if actual_win_length<time_align_win_length
         s_fpadding = nan(size(fcv_data,1),time_align_win_length-actual_win_length);
         s_tpadding = nan(size(TTL_data.TTLs,2),time_align_win_length-actual_win_length);
         s_ts_pad = nan(1,time_align_win_length-actual_win_length);
