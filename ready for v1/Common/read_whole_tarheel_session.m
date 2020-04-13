@@ -31,11 +31,23 @@ files = {filepaths.name};
 all_ch0_data = []; all_ch1_data = [];all_ttls = [];
 %for each datafile
 for i = 1:length(files)
-    %initialise variable
-    temp_ch = [];
+    %initialise variables
+    temp_ch0_fcv_data = [];
+    temp_ch1_fcv_data = [];
+    tempTTLs = [];
     %load raw tarheel & TTLS
     [~, temp_ch0_fcv_data, temp_ch1_fcv_data] = tarheel_read([datapath files{i}],no_of_channels);
-    [~, tempTTLs] = TTLsRead([datapath files{i} '.txt']);   
+    [~, tempTTLs] = TTLsRead([datapath files{i} '.txt']);
+    
+    %If a file was stopped early in Tarheel then the length of the
+    %extracted TTLs will match the intended recording length, whereas the
+    %length fo the FCV data will match the actual recorded data length.
+    %Check this, then fix the length of the TTLs and give the user a
+    %warning message.
+    if size(tempTTLs,1) > size(temp_ch0_fcv_data,2)
+       tempTTLs = tempTTLs(1:size(temp_ch0_fcv_data,2),:);
+       warning('Recording %s (file %i of %i) stopped earlier than intended recording length in Tarheel.',files{i}, i, length(files))
+    end
     
     all_ch0_data = [all_ch0_data, temp_ch0_fcv_data];
     if no_of_channels == 2
