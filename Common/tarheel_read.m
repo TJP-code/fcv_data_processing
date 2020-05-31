@@ -1,6 +1,6 @@
 function [fcv_header, ch0_fcv_data, ch1_fcv_data] = tarheel_read(filename,no_of_channels)
 
-%function [fcv_header, ch1_fcv_data, ch0_fcv_data] = tarheel_read(filename,no_of_channels)
+%function [fcv_header, ch0_fcv_data, ch1_fcv_data] = tarheel_read(filename,no_of_channels)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
