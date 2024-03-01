@@ -24,11 +24,10 @@ if params.apply_chemometrics
         fcv_chemometrics(processed_data, chemo_params, cut_TTLs, cut_ts);   
     
     [h, all_IvT, avg_colourplot] = plot_fcv_trials(model_cvs, cut_ts, cut_TTLs, params, c_predicted);
-    suptitle([params.fig_title]);
+    
 else
 
     [h, all_IvT, avg_colourplot] = plot_fcv_trials(processed_data, cut_ts, cut_TTLs, params, []);
-    suptitle([params.fig_title]);
 end
 
 
@@ -159,4 +158,5 @@ if params.plot_main_figs == 1
     ax = gca;
     ax.YDir = 'normal';
     colormap(ax,'parula')
+    suptitle([params.fig_title]);
 end

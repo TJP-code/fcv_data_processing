@@ -32,9 +32,10 @@ function [cut_data, cut_points, cut_TTLs, cut_ts] = cut_fcv_data(fcv_data, TTL_d
                               %0 = start, 1 = end, 0.5 = middle %Rounds up to nearest scan
                               
 % cut_params.include.bits = []; %TTLs that must also occur near target TTL
-% cut_params.include.window = []; %time(s) around target TTL in which include bits must occur [s before target,time after target];
+% cut_params.include.window = []; %time(s) around target TTL in which
+% include bits must occur [s before target,time after target]; one window required per include bit
 % cut_params.exclude.bits = []; %If these bits occur near target TTL, exclude this trial
-% cut_params.exclude.window = []; %time window around target TTL to look for exclude TTL
+% cut_params.exclude.window = []; %time window around target TTL to look for exclude TTL, one window required per include bit
 % cut_params.ignore_repeats = []; %no of seconds to ignore repeats
 % cut_params.sample_rate = 10;
 % cut_params.time_align = [10 30]; %window size, [seconds before after]
@@ -90,12 +91,12 @@ for i = 1:size(cut_points,1)
     
     actual_win_length = cut_points(i,2)-cut_points(i,1)+1;
     %if first part of trial missing
-    if actual_win_length<time_align_win_length && (target_bit_start(i)-(params.time_align(1)*10) < 0)
+    if actual_win_length<time_align_win_length && (cut_location(i)-(params.time_align(1)*10) < 0)
         s_fpadding = nan(size(fcv_data,1),time_align_win_length-actual_win_length);
         s_tpadding = nan(size(TTL_data.TTLs,2),time_align_win_length-actual_win_length);
         s_ts_pad = nan(1,time_align_win_length-actual_win_length);
     %if second part of trial missing
-    elseif actual_win_length<time_align_win_length && (target_bit_end(i)+(params.time_align(2)*10)>size(fcv_data,2))
+    elseif actual_win_length<time_align_win_length && (cut_location(i)+(params.time_align(2)*10)>size(fcv_data,2))
         e_fpadding = nan(size(fcv_data,1),time_align_win_length-actual_win_length);
         e_tpadding = nan(size(TTL_data.TTLs,2),time_align_win_length-actual_win_length);
         e_ts_pad = nan(1,time_align_win_length-actual_win_length);
@@ -115,11 +116,11 @@ for i = 1:length(cut_TTLs)
     
     %apply exclusion
     exclude_trial = ...
-        include_exclude(params.exclude.window, params.sample_rate, cut_location(i), TTL_data.TTLs, cut_TTLs{i},params.exclude.bits);
+        include_exclude(params.exclude.window, params.sample_rate, cut_location(i), TTL_data.TTLs, cut_TTLs{i},params.exclude.bits,params.target_bit, target_bit_start(i),target_bit_end(i));
     
     %inclusion
     include_trial = ...
-        include_exclude(params.include.window, params.sample_rate, cut_location(i), TTL_data.TTLs, cut_TTLs{i},params.include.bits);
+        include_exclude(params.include.window, params.sample_rate, cut_location(i), TTL_data.TTLs, cut_TTLs{i},params.include.bits,params.target_bit, target_bit_start(i),target_bit_end(i));
     
     %check for included TTLs    
     if exclude_trial == 1 || include_trial == 0
@@ -129,6 +130,7 @@ end
 
 cut_data(rm_list) = [];
 cut_TTLs(rm_list) = [];
+cut_ts(rm_list) = [];
 cut_points(rm_list,:) = [];
 
 if isempty(cut_points)
@@ -137,14 +139,19 @@ end
     
 
 
-function [result] = include_exclude(window, sample_rate, cut_location, TTLs, cut_TTLs, ie_bits)
+function [result] = include_exclude(window, sample_rate, cut_location, TTLs, cut_TTLs, ie_bits, targetbit, t_bit_start,t_bit_end)
+
+%remove target TTL from TTLs (so that this TTL can be used for exclude/include)
+temp_TTLs = TTLs;
+temp_TTLs(t_bit_start:t_bit_end,targetbit) = 0;
 
 %extract segment using window
 if ~isempty(window)
     %for each bit
     for j = 1:size(window,1)
-        segment = [cut_location-window(j,1)*sample_rate,(cut_location-1)+window(j,2)*sample_rate];
-        TTL_window = TTLs([segment(1):segment(2)],:);  
+        segment = max([cut_location-window(j,1)*sample_rate,(cut_location-1)+window(j,2)*sample_rate],1);
+        if segment(2) > size(TTLs,1); segment(2) = size(TTLs,1); end
+        TTL_window = temp_TTLs([segment(1):segment(2)],:);  
         result(j) = (sum(sum(TTL_window(:,ie_bits(j))))>0);
     end
     result = sum(result)>0;

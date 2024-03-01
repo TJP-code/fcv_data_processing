@@ -1,5 +1,5 @@
 function h = plot_TTLs(TTLs, ts, TTLnames)
-
+% function h = plot_TTLs(TTLs, ts, TTLnames)
 %plot_TTLs plots TTL data
 %
 %function h = plot_TTLs(TTLs)
